@@ -1,0 +1,92 @@
+{% extends "_base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto p-6">
+    <h1 class="text-2xl font-bold mb-6">📦 Controle de Estoque</h1>
+
+    <!-- Barra de busca e filtro -->
+    <form method="get" class="mb-6 flex flex-col sm:flex-row gap-4">
+        <!-- Campo de busca -->
+        <input 
+            type="text" 
+            name="search" 
+            value="{{ request.GET.q }}" 
+            placeholder="Buscar MAC ou SN..." 
+            class="w-full sm:w-1/2 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+
+        <!-- Campo de filtro -->
+        <select 
+            name="location" 
+            class="w-full sm:w-1/4 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+            <option value="">Todos os locais</option>
+            {% for loc in locations %}
+                <option value="{{ loc.location }}" {% if request.GET.location == loc.location|stringformat:"s" %}selected{% endif %}>
+                    {{ loc.location }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <!-- Botão de pesquisa -->
+        <button 
+            type="submit" 
+            class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+        >
+            Filtrar
+        </button>
+    </form>
+
+    <!-- Tabela de resultados -->
+    <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+        <table class="min-w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-gray-100">
+                    <th class="px-6 py-3 border-b">Equipamento</th>
+                    <th class="px-6 py-3 border-b">MAC</th>
+                    <th class="px-6 py-3 border-b">Serial</th>
+                    <th class="px-6 py-3 border-b">Local</th>
+                    <th class="px-6 py-3 border-b">Motivo</th>
+                    <th class="px-6 py-3 border-b">Observação</th>
+                    <th class="px-6 py-3 border-b">Responsável</th>
+                    <th class="px-6 py-3 border-b">Ultima movimentação</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in object_list %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-3 border-b"><a href="#">{{ item.equipment }}</a></td>
+                        <td class="px-6 py-3 border-b">{{ item.equipment.mac_address }}</td>
+                        <td class="px-6 py-3 border-b">{{ item.equipment.serial_number }}</td>
+                        <td class="px-6 py-3 border-b">{{ item.location }}</td>
+                        <td class="px-6 py-3 border-b">{{ item.reason }}</td>
+                        <td class="px-6 py-3 border-b">{{ item.observation }}</td>
+                        <td class="px-6 py-3 border-b">{{ item.responsible }}</td>
+                        <td class="px-6 py-3 border-b">{{ item.updated_at }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="7" class="px-6 py-4 text-center text-gray-500">Nenhum item encontrado.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Paginação -->
+    {% if is_paginated %}
+        <div class="mt-6 flex justify-center space-x-2">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}&q={{ request.GET.q }}&location={{ request.GET.location }}" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Anterior</a>
+            {% endif %}
+
+            <span class="px-4 py-2 bg-blue-600 text-white rounded">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}&q={{ request.GET.q }}&location={{ request.GET.location }}" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Próxima</a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

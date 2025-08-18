@@ -1,0 +1,52 @@
+ <!-- Sidebar Dinâmico -->
+<aside 
+    class="bg-white shadow-md flex flex-col transition-all duration-300"
+    :class="open ? 'w-64' : 'w-20'"
+>
+    <!-- Header do Sidebar -->
+    <div class="flex items-center justify-between p-4 border-b">
+        <span class="text-xl font-bold truncate" x-show="open">📦 Estoque</span>
+        <button 
+            @click="open = !open"
+            class="p-2 rounded hover:bg-gray-200"
+        >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Navegação -->
+    <nav class="flex-1 p-4 space-y-2">
+        <a href="{% url 'dashboard' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 transition">
+            📊 <span x-show="open">Dashboards</span>
+        </a>
+        <a href="{% url 'stock' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 transition">
+            📋 <span x-show="open">Estoque</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 transition">
+            📍 <span x-show="open">Rastreamento</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 transition">
+            🛠️ <span x-show="open">Cadastrar Equipamento</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 transition">
+            📝 <span x-show="open">Motivos</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 transition">
+            📂 <span x-show="open">Categorias de equipamento</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 transition">
+            🏷️ <span x-show="open">Marcas de Equipamento</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 transition">
+            ⚙️ <span x-show="open">Modelos de Equipamento</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 transition">
+            ✅ <span x-show="open">Status de Equipamento</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 transition">
+            👤 <span x-show="open">Meu Perfil</span>
+        </a>
+    </nav>
+</aside>

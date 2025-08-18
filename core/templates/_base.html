@@ -1,0 +1,35 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR" x-data="{ open: false }">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Controle de Estoque{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js para o toggle -->
+    <script src="//unpkg.com/alpinejs" defer></script>
+</head>
+<body class="bg-gray-100 text-gray-800 flex flex-col min-h-screen">
+
+    <!-- Layout principal -->
+    <div class="flex flex-1">
+        
+       {% include 'components/sidebar.html' %}
+
+        <!-- Conteúdo Principal -->
+        <main class="flex-1 p-6">
+            {% block content %}
+            <h1 class="text-2xl font-bold mb-4">Bem-vindo ao sistema de estoque</h1>
+            <p>Selecione uma opção no menu lateral para começar.</p>
+            {% endblock %}
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white shadow-md py-4 text-center text-gray-600">
+        &copy; {{ year|default:"2025" }} - Sistema de Controle de Estoque
+    </footer>
+
+</body>
+</html>
