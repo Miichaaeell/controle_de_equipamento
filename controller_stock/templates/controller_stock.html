@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="container mx-auto p-6">
-    <h1 class="text-2xl font-bold mb-6">📦 Controle de Estoque</h1>
+    <h1 class="text-2xl font-bold mb-6">📋 Controle dos Equipamentos</h1>
 
     <!-- Barra de busca e filtro -->
     <form method="get" class="mb-6 flex flex-col sm:flex-row gap-4">
@@ -56,7 +56,7 @@
             <tbody>
                 {% for item in object_list %}
                     <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-3 border-b"><a href="#">{{ item.equipment }}</a></td>
+                        <td class="px-6 py-3 border-b"><a href="{% url 'update_controller' item.id %}">{{ item.equipment }}</a></td>
                         <td class="px-6 py-3 border-b">{{ item.equipment.mac_address }}</td>
                         <td class="px-6 py-3 border-b">{{ item.equipment.serial_number }}</td>
                         <td class="px-6 py-3 border-b">{{ item.location }}</td>

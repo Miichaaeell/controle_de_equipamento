@@ -2,24 +2,24 @@ from django.db import models
 from controllers.models import TimeStampModel, UserTracking
 
 
-class Branch(TimeStampModel):
-    branch = models.CharField(
+class Brand(TimeStampModel):
+    brand = models.CharField(
         max_length=124, unique=True, verbose_name='Marca')
 
     class Meta:
         verbose_name = 'Marca'
         verbose_name_plural = 'Marcas'
-        ordering = ['branch']
+        ordering = ['brand']
 
     def __str__(self):
-        return self.branch
+        return self.brand
 
 
 class ModelEquipment(TimeStampModel):
     model = models.CharField(
         max_length=124, unique=True, verbose_name='Modelo')
-    branch = models.ForeignKey(
-        Branch, on_delete=models.PROTECT, verbose_name='Marca', related_name='models')
+    brand = models.ForeignKey(
+        Brand, on_delete=models.PROTECT, verbose_name='Marca', related_name='models')
 
     class Meta:
         verbose_name = 'Modelo do equipamento'
@@ -27,7 +27,7 @@ class ModelEquipment(TimeStampModel):
         ordering = ['model']
 
     def __str__(self):
-        return str(f'{self.model} - {self.branch}')
+        return str(f'{self.model}')
 
 
 class Category(TimeStampModel):
@@ -57,8 +57,8 @@ class StatusEquipment(TimeStampModel):
 
 
 class Equipment(UserTracking, TimeStampModel):
-    branch = models.ForeignKey(
-        Branch, on_delete=models.PROTECT, verbose_name='Marca', related_name='equipments')
+    brand = models.ForeignKey(
+        Brand, on_delete=models.PROTECT, verbose_name='Marca', related_name='equipments')
     model = models.ForeignKey(ModelEquipment, on_delete=models.PROTECT,
                               verbose_name='Modelo', related_name='equipments')
     category = models.ForeignKey(

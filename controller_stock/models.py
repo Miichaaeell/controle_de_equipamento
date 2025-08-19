@@ -49,7 +49,7 @@ class ControllerStock(UserTracking, TimeStampModel):
     class Meta:
         verbose_name = 'Controle Estoque'
         verbose_name_plural = 'Controle Estoque'
-        ordering = ['equipment']
+        ordering = ['-created_at']
         indexes = [
             models.Index(fields=['location'])
         ]
