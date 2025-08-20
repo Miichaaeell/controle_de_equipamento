@@ -1,0 +1,21 @@
+ <form method="get" class="mb-6 flex flex-col sm:flex-row gap-4">
+        <!-- Campo de filtro -->
+        <select
+            name="location"
+            class="w-full sm:w-1/4 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+            <option value="">Todos os locais</option>
+            {% for loc in locations %}
+                <option value="{{ loc.location }}" {% if request.GET.location == loc.location|stringformat:"s" %}selected{% endif %}>
+                    {{ loc.location }}
+                </option>
+            {% endfor %}
+        </select>
+        <!-- Botão de pesquisa -->
+        <button
+            type="submit"
+            class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+        >
+            Filtrar
+        </button>
+    </form>

@@ -1,0 +1,46 @@
+{% extends "_base.html" %}
+{% load static %}
+
+{% block title %}
+    {% if not object %}
+        ➕ Cadastrar {{ title }}
+    {% else %}
+         ✏️ Atualizar {{ title }}
+    {% endif %}    
+{% endblock %}
+
+
+{% block content %}
+<div class="container mx-auto p-6">
+    
+    {% if not object %}
+        <h1 class="text-2xl font-bold mb-6">➕ Cadastrar {{ title }} </h1>
+    {% else %}
+        <h1 class="text-2xl font-bold mb-6">✏️ Atualizar {{ title }} </h1>
+    {% endif %}
+        
+    
+    <div class="bg-white p-6 rounded-lg shadow-md">  
+        <form method="post" class="space-y-6">
+            {% csrf_token %} 
+        {% for field in form %}
+        <div>
+            <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700">
+            {{ field.label }} {% if field.field.required %}*{% endif %}
+            </label>
+            {{ field }}
+            {% if field.errors %}
+            <p class="text-sm text-red-600">{{ field.errors|striptags }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+
+        <!-- Botões --> 
+         <div class="flex justify-end gap-4">
+        <a href="{% url 'stock' %}" class="px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition"> Cancelar </a> 
+        <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"> Salvar </button> 
+        </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

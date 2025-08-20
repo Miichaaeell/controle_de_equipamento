@@ -2,7 +2,7 @@ from django.db.models import Q
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, View, UpdateView
-from core.mixins import FormValidMixin
+from core.mixins import FormValidMixin, CreateContextMixin
 from .models import ControllerStock, Location, Tracking
 from .forms import ControllerStockForm
 
@@ -41,10 +41,10 @@ class ControllerStockView(ListView):
         return query_set
 
 
-class UpdateControllerStockView(FormValidMixin, UpdateView):
+class UpdateControllerStockView(FormValidMixin, CreateContextMixin, UpdateView):
     model = ControllerStock
     form_class = ControllerStockForm
-    template_name = 'update_controller.html'
+    template_name = 'components/create_update_model.html'
     success_url = reverse_lazy('stock')
 
     def get_initial(self):

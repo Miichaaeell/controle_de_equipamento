@@ -27,8 +27,8 @@
         <a href="{% url 'tracking' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 transition">
             📍 <span x-show="open">Rastreamento</span>
         </a>
-        <a href="{% url 'create_equipment' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 transition">
-            ➕ <span x-show="open">Cadastrar Equipamento</span>
+        <a href="{% url 'list_equipment' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 transition">
+            ➕ <span x-show="open">Listar Equipamento</span>
         </a>
         <a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 transition">
             📝 <span x-show="open">Motivos</span>
@@ -36,7 +36,7 @@
         <a href="{% url 'create_category' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 transition">
             📂 <span x-show="open">Categorias de equipamento</span>
         </a>
-        <a href=" {% url 'create_brand' %} " class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 transition">
+        <a href=" {% url 'list_brand' %} " class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 transition">
             🏷️ <span x-show="open">Marcas de Equipamento</span>
         </a>
         <a href="{% url 'create_model_equipment' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 transition">
