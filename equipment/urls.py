@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CreateEquipmentView, CreateBrandView, CreateModelEquipmentView, CreateCategoryView, CreateStatusView, ListEquipmentView, ListBrandView, UpdateBrandView, UpdateEquipmentView
+from .views import CreateEquipmentView, CreateBrandView, CreateModelEquipmentView, CreateCategoryView, CreateStatusEquipmentView, ListEquipmentView, ListBrandView,  ListModelEquipmentView, ListCategoryView, ListStatusEquipmentView, UpdateBrandView, UpdateEquipmentView, UpdateModelEquipmentView, UpdateCategoryView, UpdateStatusEquipmentView
 
 
 urlpatterns = [
@@ -17,11 +17,23 @@ urlpatterns = [
 
     # Views Model
     path('create_model_equipment/', CreateModelEquipmentView.as_view(),
-         name='create_model_equipment'),
+         name='create_modelequipment'),
+    path('list_model_equipment/', ListModelEquipmentView.as_view(),
+         name='list_modelequipment'),
+    path('update_model_equipment/<pk>', UpdateModelEquipmentView.as_view(),
+         name='update_modelequipment'),
 
     # Views Category
     path('create_category/', CreateCategoryView.as_view(), name='create_category'),
+    path('list_category/', ListCategoryView.as_view(), name='list_category'),
+    path('update_category/<pk>', UpdateCategoryView.as_view(),
+         name='update_category'),
 
     # Views Status
-    path('create_status/', CreateStatusView.as_view(), name='create_status')
+    path('create_status/', CreateStatusEquipmentView.as_view(),
+         name='create_statusequipment'),
+    path('list_status/', ListStatusEquipmentView.as_view(),
+         name='list_statusequipment'),
+    path('update_status/<pk>', UpdateStatusEquipmentView.as_view(),
+         name='update_statusequipment'),
 ]

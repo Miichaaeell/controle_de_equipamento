@@ -20,7 +20,7 @@ class ListEquipmentView(CreateContextMixin, ListView):
     context_object_name = "object_list"
 
 
-class UpdateEquipmentView(CreateContextMixin, UpdateView):
+class UpdateEquipmentView(FormValidMixin, CreateContextMixin, UpdateView):
     model = Equipment
     form_class = EquipmentForm
     template_name = 'components/create_update_model.html'
@@ -42,7 +42,7 @@ class ListBrandView(CreateContextMixin, ListView):
     context_object_name = 'object_list'
 
 
-class UpdateBrandView(CreateContextMixin, UpdateView):
+class UpdateBrandView(FormValidMixin, CreateContextMixin, UpdateView):
     model = Brand
     form_class = BrandForm
     template_name = 'components/create_update_model.html'
@@ -54,20 +54,60 @@ class CreateModelEquipmentView(FormValidMixin, CreateContextMixin, CreateView):
     model = ModelEquipment
     form_class = ModelEquipmentForm
     template_name = 'components/create_update_model.html'
-    success_url = reverse_lazy('stock')
+    success_url = reverse_lazy('list_modelequipment')
 
+
+class ListModelEquipmentView(CreateContextMixin, ListView):
+    model = ModelEquipment
+    template_name = 'components/list.html'
+    context_object_name = 'object_list'
+
+
+class UpdateModelEquipmentView(FormValidMixin, CreateContextMixin, UpdateView):
+    model = ModelEquipment
+    form_class = ModelEquipmentForm
+    template_name = 'components/create_update_model.html'
+    success_url = reverse_lazy('list_modelequipment')
 
 # Views Category
+
+
 class CreateCategoryView(FormValidMixin, CreateContextMixin, CreateView):
     model = Category
     form_class = CategoryForm
     template_name = 'components/create_update_model.html'
-    success_url = reverse_lazy('stock')
+    success_url = reverse_lazy('list_category')
+
+
+class ListCategoryView(CreateContextMixin, ListView):
+    model = Category
+    template_name = 'components/list.html'
+    context_object_name = 'object_list'
+
+
+class UpdateCategoryView(FormValidMixin, CreateContextMixin, UpdateView):
+    model = Category
+    form_class = BrandForm
+    template_name = 'components/create_update_model.html'
+    success_url = reverse_lazy('list_category')
 
 
 # Views Status
-class CreateStatusView(FormValidMixin, CreateContextMixin, CreateView):
+class CreateStatusEquipmentView(FormValidMixin, CreateContextMixin, CreateView):
     model = StatusEquipment
     form_class = StatusEquipmentForm
     template_name = 'components/create_update_model.html'
-    success_url = reverse_lazy('stock')
+    success_url = reverse_lazy('list_statusequipment')
+
+
+class ListStatusEquipmentView(CreateContextMixin, ListView):
+    model = StatusEquipment
+    template_name = 'components/list.html'
+    context_object_name = 'object_list'
+
+
+class UpdateStatusEquipmentView(FormValidMixin, CreateContextMixin, UpdateView):
+    model = StatusEquipment
+    form_class = StatusEquipmentForm
+    template_name = 'components/create_update_model.html'
+    success_url = reverse_lazy('list_statusequipment')
