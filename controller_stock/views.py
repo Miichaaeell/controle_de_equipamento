@@ -15,7 +15,7 @@ class DashboardView(LoginRequiredMixin, View):
 
 
 # Views Controller
-class ControllerStockView(ListView):
+class ControllerStockView(LoginRequiredMixin, ListView):
     model = ControllerStock
     template_name = 'controller_stock.html'
     paginate_by = 20
@@ -44,7 +44,7 @@ class ControllerStockView(ListView):
         return query_set
 
 
-class UpdateControllerStockView(FormValidMixin, CreateContextMixin, UpdateView):
+class UpdateControllerStockView(LoginRequiredMixin, FormValidMixin, CreateContextMixin, UpdateView):
     model = ControllerStock
     form_class = ControllerStockForm
     template_name = 'update_controller.html'
@@ -60,7 +60,7 @@ class UpdateControllerStockView(FormValidMixin, CreateContextMixin, UpdateView):
 
 
 # View Tracking
-class TrackingView(ListView):
+class TrackingView(LoginRequiredMixin, ListView):
     model = Tracking
     template_name = 'tracking.html'
     paginate_by = 20
@@ -83,20 +83,20 @@ class TrackingView(ListView):
 
 
 # Views Reason
-class CreateReasonView(CreateContextMixin, CreateView):
+class CreateReasonView(LoginRequiredMixin, CreateContextMixin, CreateView):
     model = Reason
     form_class = ReasonForm
     template_name = 'components/create_update_model.html'
     success_url = reverse_lazy('list_reason')
 
 
-class ListReasonView(CreateContextMixin, ListView):
+class ListReasonView(LoginRequiredMixin, CreateContextMixin, ListView):
     model = Reason
     context_object_name = 'object_list'
     template_name = 'components/list.html'
 
 
-class UpdateReasonView(CreateContextMixin, UpdateView):
+class UpdateReasonView(LoginRequiredMixin, CreateContextMixin, UpdateView):
     model = Reason
     form_class = ReasonForm
     template_name = 'components/create_update_model.html'

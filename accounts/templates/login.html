@@ -15,7 +15,7 @@
   <div class="absolute inset-0 bg-black/60 backdrop-blur-md"></div>
 
   <!-- Card de Login -->
-  <div class="relative z-10 w-full max-w-md p-8 rounded-2xl shadow-lg bg-gray-900/80">
+  <div class="relative z-10 w-full max-w-md p-8 rounded-2xl shadow-lg bg-gray-700/80">
     <div class="p-2 mb-3 center">
         <img src="{% static 'image/logo/logo_cosmonet_transparent.png' %}" alt="CosmoNet Logo"
                 class="h-10 object-contain mx-auto">
@@ -24,6 +24,10 @@
     <h2 class="text-2xl font-bold text-center text-white mb-6">
       {{ saudacao }} 👋
     </h2>
+    
+    {% if erro %}
+        <div class="text-center text-red-500"><strong>{{ erro }}</strong></div>
+    {% endif %}
 
     <form method="POST" class="space-y-5">
       {% csrf_token %}
@@ -61,7 +65,7 @@
 
     <!-- Rodapé -->
     <p class="text-center text-gray-400 text-sm mt-6">
-      © {{ year }} CosmoNet Fibra
+      © {{ year|default:"2025" }} CosmoNet Fibra
     </p>
   </div>
 </div>

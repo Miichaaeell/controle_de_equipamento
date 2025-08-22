@@ -1,4 +1,4 @@
-from django.views.generic import View, ListView
+from django.views.generic import View
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 # Create your views here.
@@ -18,10 +18,13 @@ class LoginView(View):
         if user is not None:
             login(request, user)
             return redirect('dashboard')
-            ...
+
         else:
-            # Return an 'invalid login' error message.
-            ...
+            context = {
+                'saudacao': 'Bom dia',
+                'erro': 'Usuário ou Senha inválidos'
+            }
+            return render(request, 'login.html', context)
 
 
 class LogoutView(View):
