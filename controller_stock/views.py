@@ -1,15 +1,15 @@
 from django.db.models import Q
 from django.shortcuts import render
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, View, UpdateView, CreateView
 from core.mixins import FormValidMixin, CreateContextMixin
 from .models import ControllerStock, Location, Tracking, Reason
 from .forms import ControllerStockForm, ReasonForm
 
+
 # View Dashboard
-
-
-class DashboardView(View):
+class DashboardView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         return render(request, 'dashboard.html')
 
