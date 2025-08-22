@@ -5,30 +5,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Controle de Estoque{% endblock %}</title>
+    <title>{% block title %}Controle de Equipamento{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Alpine.js para o toggle -->
     <script src="//unpkg.com/alpinejs" defer></script>
 </head>
-<body class="bg-gray-100 text-gray-800 flex flex-col min-h-screen">
+<body class="bg-gray-900 text-gray-100 flex flex-col min-h-screen">
 
     <!-- Layout principal -->
     <div class="flex flex-1">
         
-       {% include 'components/sidebar.html' %}
+        {% include 'components/sidebar.html' %}
 
         <!-- Conteúdo Principal -->
-        <main class="flex-1 p-6">
-            {% block content %}
-            <h1 class="text-2xl font-bold mb-4">Bem-vindo ao sistema de estoque</h1>
-            <p>Selecione uma opção no menu lateral para começar.</p>
-            {% endblock %}
+        <main class="flex-1 flex flex-col">
+            
+            <!-- Topbar -->
+            <header class="flex justify-between items-center bg-gray-800 shadow-md px-6 py-3">
+                <h1 class="text-xl font-bold tracking-wide text-white">
+                    Controle de Equipamentos
+                </h1>
+                <div>
+                    <img src="{% static 'image/logo/logo_cosmonet_transparent.png' %}" alt="CosmoNet Logo"
+                         class="h-10 object-contain">
+                </div>
+            </header>
+
+            <!-- Conteúdo dinâmico -->
+            <div class="flex-1 p-6">
+                {% block content %}
+                <h1 class="text-2xl font-bold mb-4">Bem-vindo ao sistema de Controle de Equipamento</h1>
+                <p>Selecione uma opção no menu lateral para começar.</p>
+                {% endblock %}
+            </div>
+
         </main>
     </div>
 
-    <!-- Footer -->
-    <footer class="bg-white shadow-md py-4 text-center text-gray-600">
-        &copy; {{ year|default:"2025" }} - Sistema de Controle de Estoque
+    <!-- Footer fixo -->
+    <footer class="bg-gray-800 py-4 text-center text-gray-400">
+        &copy; {{ year|default:"2025" }} - Sistema de Controle de Estoque | CosmoNet Fibra
     </footer>
 
 </body>

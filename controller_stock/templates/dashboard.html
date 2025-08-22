@@ -1,1 +1,123 @@
 {% extends '_base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    <!-- Título -->
+    <h1 class="text-3xl font-bold text-white mb-6">📊 Dashboard - Controle de Equipamentos</h1>
+
+    <!-- Métricas principais -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+        <!-- Total Ativos -->
+        <div class="bg-gray-800 rounded-2xl shadow p-6 flex items-center justify-between hover:scale-105 transition">
+            <div>
+                <p class="text-gray-400">Equipamentos Ativos</p>
+                <h2 class="text-2xl font-bold text-green-400">980</h2>
+            </div>
+            <span class="text-4xl">✅</span>
+        </div>
+
+        <!-- Total Inativos -->
+        <div class="bg-gray-800 rounded-2xl shadow p-6 flex items-center justify-between hover:scale-105 transition">
+            <div>
+                <p class="text-gray-400">Equipamentos Inativos</p>
+                <h2 class="text-2xl font-bold text-red-400">120</h2>
+            </div>
+            <span class="text-4xl">❌</span>
+        </div>
+
+        <!-- Em Estoque -->
+        <div class="bg-gray-800 rounded-2xl shadow p-6 flex items-center justify-between hover:scale-105 transition">
+            <div>
+                <p class="text-gray-400">Em Estoque</p>
+                <h2 class="text-2xl font-bold text-blue-400">300</h2>
+            </div>
+            <span class="text-4xl">📦</span>
+        </div>
+
+        <!-- Em Cliente -->
+        <div class="bg-gray-800 rounded-2xl shadow p-6 flex items-center justify-between hover:scale-105 transition">
+            <div>
+                <p class="text-gray-400">Em Cliente</p>
+                <h2 class="text-2xl font-bold text-yellow-400">450</h2>
+            </div>
+            <span class="text-4xl">👨‍💼</span>
+        </div>
+
+        <!-- Com Técnico -->
+        <div class="bg-gray-800 rounded-2xl shadow p-6 flex items-center justify-between hover:scale-105 transition">
+            <div>
+                <p class="text-gray-400">Com Técnico</p>
+                <h2 class="text-2xl font-bold text-purple-400">80</h2>
+            </div>
+            <span class="text-4xl">🛠️</span>
+        </div>
+    </div>
+
+    <!-- Gráficos -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Gráfico de Pizza -->
+        <div class="bg-gray-800 rounded-2xl shadow p-6">
+            <h2 class="text-lg font-semibold text-white mb-4">Distribuição de Equipamentos</h2>
+            <canvas id="statusChart"></canvas>
+        </div>
+
+        <!-- Gráfico de Barras -->
+        <div class="bg-gray-800 rounded-2xl shadow p-6">
+            <h2 class="text-lg font-semibold text-white mb-4">Top Categorias</h2>
+            <canvas id="categoryChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Gráfico de Pizza (Distribuição de status)
+    const ctx1 = document.getElementById('statusChart');
+    new Chart(ctx1, {
+        type: 'doughnut',
+        data: {
+            labels: ['Ativos', 'Inativos', 'Estoque', 'Cliente', 'Técnico'],
+            datasets: [{
+                data: [980, 120, 300, 450, 80],
+                backgroundColor: ['#22c55e', '#ef4444', '#3b82f6', '#eab308', '#a855f7'],
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    labels: { color: '#fff' }
+                }
+            }
+        }
+    });
+
+    // Gráfico de Barras (Categorias)
+    const ctx2 = document.getElementById('categoryChart');
+    new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: ['ONU', 'Roteadores', 'Switches', 'STB', 'Outros'],
+            datasets: [{
+                label: 'Quantidade',
+                data: [320, 210, 150, 80, 60],
+                backgroundColor: '#3b82f6',
+            }]
+        },
+        options: {
+            scales: {
+                x: { ticks: { color: '#fff' } },
+                y: { ticks: { color: '#fff' } }
+            },
+            plugins: {
+                legend: {
+                    labels: { color: '#fff' }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

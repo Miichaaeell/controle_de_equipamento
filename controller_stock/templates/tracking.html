@@ -11,10 +11,10 @@
     {% include 'components/search.html' %}
 
     <!-- Tabela de registros -->
-    <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+    <div class="overflow-x-auto shadow-md rounded-lg">
         <table class="min-w-full text-left border-collapse">
             <thead>
-                <tr class="bg-gray-100">
+                <tr class="bg-gray-800">
                     <th class="px-6 py-3 border-b">Equipamento</th>
                     <th class="px-6 py-3 border-b">Mac Address</th>
                     <th class="px-6 py-3 border-b">Serial Number</th>
@@ -28,7 +28,7 @@
             </thead>
             <tbody>
                 {% for track in object_list %}
-                    <tr class="hover:bg-gray-50">
+                    <tr class="hover:bg-gray-800">
                         <td class="px-6 py-3 border-b">{{ track.equipment }}</td>
                         <td class="px-6 py-3 border-b">{{ track.equipment.mac_address }}</td>
                         <td class="px-6 py-3 border-b">{{ track.equipment.serial_number }}</td>

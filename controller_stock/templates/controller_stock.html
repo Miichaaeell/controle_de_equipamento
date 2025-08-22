@@ -10,10 +10,10 @@
     {% include 'components/filter.html' %}
 
     <!-- Tabela de resultados -->
-    <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+    <div class="overflow-x-auto shadow-md rounded-lg">
         <table class="min-w-full text-left border-collapse">
             <thead>
-                <tr class="bg-gray-100">
+                <tr class="bg-gray-800">
                     <th class="px-6 py-3 border-b">Equipamento</th>
                     <th class="px-6 py-3 border-b">MAC</th>
                     <th class="px-6 py-3 border-b">Serial</th>
@@ -26,7 +26,7 @@
             </thead>
             <tbody>
                 {% for item in object_list %}
-                    <tr class="hover:bg-gray-50">
+                    <tr class="hover:bg-gray-800">
                         <td class="px-6 py-3 border-b"><a href="{% url 'update_controller' item.id %}">{{ item.equipment }}</a></td>
                         <td class="px-6 py-3 border-b">{{ item.equipment.mac_address }}</td>
                         <td class="px-6 py-3 border-b">{{ item.equipment.serial_number }}</td>

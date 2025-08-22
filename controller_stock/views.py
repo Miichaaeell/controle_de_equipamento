@@ -44,7 +44,7 @@ class ControllerStockView(ListView):
 class UpdateControllerStockView(FormValidMixin, CreateContextMixin, UpdateView):
     model = ControllerStock
     form_class = ControllerStockForm
-    template_name = 'components/create_update_model.html'
+    template_name = 'update_controller.html'
     success_url = reverse_lazy('stock')
 
     def get_initial(self):

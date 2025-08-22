@@ -1,6 +1,6 @@
  <!-- Sidebar Dinâmico -->
 <aside 
-    class="bg-white shadow-md flex flex-col transition-all duration-300"
+    class="shadow-md flex flex-col transition-all duration-300"
     :class="open ? 'w-64' : 'w-20'"
 >
     <!-- Header do Sidebar -->
@@ -25,16 +25,16 @@
             📋 <span x-show="open">Controle de equipamento</span>
         </a>
         <a href="{% url 'tracking' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 transition">
-            📍 <span x-show="open">Rastreamento</span>
+            📈 <span x-show="open">Rastreamento</span>
         </a>
         <a href="{% url 'list_equipment' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 transition">
-            ➕ <span x-show="open"> Equipamento</span>
+            🧰 <span x-show="open"> Equipamento</span>
         </a>
         <a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 transition">
             📝 <span x-show="open">Motivos</span>
         </a>
         <a href="{% url 'list_category' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 transition">
-            📂 <span x-show="open">Categorias de equipamento</span>
+            ⚖️ <span x-show="open">Categorias de equipamento</span>
         </a>
         <a href=" {% url 'list_brand' %} " class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 transition">
             🏷️ <span x-show="open">Marcas de Equipamento</span>

@@ -9,24 +9,24 @@ class EquipmentForm(forms.ModelForm):
                   "mac_address", "serial_number", "status"]
         widgets = {
             "brand": forms.Select(attrs={
-                "class": "mt-1 block w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500",
+                "class": "mt-1 block w-full px bg-gray-800 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500",
             }),
             "model": forms.Select(attrs={
-                "class": "mt-1 block w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500",
+                "class": "mt-1 block w-full bg-gray-800  px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500",
             }),
             "category": forms.Select(attrs={
-                "class": "mt-1 block w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500",
+                "class": "mt-1 block w-full bg-gray-800  px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500",
             }),
             "mac_address": forms.TextInput(attrs={
                 "placeholder": "Ex: AA:BB:CC:DD:EE:FF",
-                "class": "mt-1 block w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500",
+                "class": "mt-1 block w-full bg-gray-800 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500",
             }),
             "serial_number": forms.TextInput(attrs={
                 "placeholder": "Digite o serial number",
-                "class": "mt-1 block w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500",
+                "class": "mt-1 block w-full bg-gray-800 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500",
             }),
             "status": forms.Select(attrs={
-                "class": "mt-1 block w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500",
+                "class": "mt-1 block w-full bg-gray-800 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500",
             }),
         }
 
@@ -38,7 +38,7 @@ class BrandForm(forms.ModelForm):
         widgets = {
             "brand": forms.TextInput(attrs={
                 "placeholder": "Marca",
-                "class": "mt-1 block w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                "class": "mt-1 block w-full bg-gray-800 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
             }),
         }
 
@@ -50,10 +50,10 @@ class ModelEquipmentForm(forms.ModelForm):
         widgets = {
             "model": forms.TextInput(attrs={
                 "placeholder": "Nome do modelo",
-                "class": "mt-1 block w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                "class": "mt-1 block w-full bg-gray-800 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
             }),
             "brand": forms.Select(attrs={
-                "class": "mt-1 block w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                "class": "mt-1 block w-full bg-gray-800 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
             }),
         }
 
@@ -65,7 +65,7 @@ class StatusEquipmentForm(forms.ModelForm):
         widgets = {
             "status": forms.TextInput(attrs={
                 "placeholder": "Ex: Em uso, Em manutenção, Disponível",
-                "class": "mt-1 block w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                "class": "mt-1 block w-full bg-gray-800 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
             }),
         }
 
@@ -77,6 +77,6 @@ class CategoryForm(forms.ModelForm):
         widgets = {
             "category": forms.TextInput(attrs={
                 "placeholder": "Ex: Roteador, Onu, Onu integrada...",
-                "class": "mt-1 block w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                "class": "mt-1 block w-full bg-gray-800 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
             }),
         }

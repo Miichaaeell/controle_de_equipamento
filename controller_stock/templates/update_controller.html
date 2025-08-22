@@ -7,40 +7,40 @@
 <div class="container mx-auto p-6">
     <h1 class="text-2xl font-bold mb-6">✏️ Movimentação do Equipamento</h1>
 
-    <div class="bg-white p-6 rounded-lg shadow-md">
+    <div class="bg-gray-800 p-6 rounded-lg shadow-md">
         <form method="post" class="space-y-6">
             {% csrf_token %}
 
             <!-- Equipment (readonly) -->
             <div>
-                <label class="block text-sm font-medium text-gray-700">Equipamento</label>
+                <label class="block text-sm font-medium">Equipamento</label>
                 <input 
                     type="text" 
                     value="{{ form.instance.equipment }}" 
                     disabled
-                    class="mt-1 block w-full px-4 py-2 border rounded-lg bg-gray-100 text-gray-700"
+                    class="mt-1 block w-full px-4 py-2 border rounded-lg  bg-gray-800"
                 >
             </div>
 
             <!-- MAC (readonly) -->
             <div>
-                <label class="block text-sm font-medium text-gray-700">MAC</label>
+                <label class="block text-sm font-medium ">MAC</label>
                 <input 
                     type="text" 
                     value="{{ form.instance.equipment.mac_address }}" 
                     disabled
-                    class="mt-1 block w-full px-4 py-2 border rounded-lg bg-gray-100 text-gray-700"
+                    class="mt-1 block w-full px-4 py-2 border rounded-lg bg-gray-800"
                 >
             </div>
 
             <!-- Serial (readonly) -->
             <div>
-                <label class="block text-sm font-medium text-gray-700">Serial</label>
+                <label class="block text-sm font-medium ">Serial</label>
                 <input 
                     type="text" 
                     value="{{ form.instance.equipment.serial_number }}" 
                     disabled
-                    class="mt-1 block w-full px-4 py-2 border rounded-lg bg-gray-100 text-gray-700"
+                    class="mt-1 block w-full px-4 py-2 border rounded-lg bg-gray-800"
                 >
             </div>
 
@@ -49,19 +49,19 @@
 
             <!-- Local (required) -->
             <div>
-                <label for="{{ form.location.id_for_label }}" class="block text-sm font-medium text-gray-700">Local *</label>
+                <label for="{{ form.location.id_for_label }}" class="block text-sm font-medium">Local *</label>
                 {{ form.location }}
             </div>
 
             <!-- Motivo (required) -->
             <div>
-                <label for="{{ form.reason.id_for_label }}" class="block text-sm font-medium text-gray-700">Motivo *</label>
+                <label for="{{ form.reason.id_for_label }}" class="block text-sm font-medium">Motivo *</label>
                 {{ form.reason }}
             </div>
 
             <!-- Observação (required) -->
             <div>
-                <label for="{{ form.observation.id_for_label }}" class="block text-sm font-medium text-gray-700">Observação *</label>
+                <label for="{{ form.observation.id_for_label }}" class="block text-sm font-medium">Observação *</label>
                 {{ form.observation }}
             </div>
 
