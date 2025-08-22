@@ -1,5 +1,5 @@
 from django import forms
-from .models import ControllerStock
+from .models import ControllerStock, Reason
 
 
 class ControllerStockForm(forms.ModelForm):
@@ -22,4 +22,16 @@ class ControllerStockForm(forms.ModelForm):
                 "required": True,
             }),
             "responsible": forms.HiddenInput(),
+        }
+
+
+class ReasonForm(forms.ModelForm):
+    class Meta:
+        model = Reason
+        fields = '__all__'
+        widgets = {
+            'reason': forms.TextInput(attrs={
+                "class": "mt-1 block w-full bg-gray-800 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500",
+                "required": True,
+            })
         }

@@ -1,10 +1,12 @@
 from django.db.models import Q
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import ListView, View, UpdateView
+from django.views.generic import ListView, View, UpdateView, CreateView
 from core.mixins import FormValidMixin, CreateContextMixin
-from .models import ControllerStock, Location, Tracking
-from .forms import ControllerStockForm
+from .models import ControllerStock, Location, Tracking, Reason
+from .forms import ControllerStockForm, ReasonForm
+
+# View Dashboard
 
 
 class DashboardView(View):
@@ -12,6 +14,7 @@ class DashboardView(View):
         return render(request, 'dashboard.html')
 
 
+# Views Controller
 class ControllerStockView(ListView):
     model = ControllerStock
     template_name = 'controller_stock.html'
@@ -56,6 +59,7 @@ class UpdateControllerStockView(FormValidMixin, CreateContextMixin, UpdateView):
         return initial
 
 
+# View Tracking
 class TrackingView(ListView):
     model = Tracking
     template_name = 'tracking.html'
@@ -76,3 +80,24 @@ class TrackingView(ListView):
                 Q(equipment__serial_number__icontains=search)
             )
         return query_set
+
+
+# Views Reason
+class CreateReasonView(CreateContextMixin, CreateView):
+    model = Reason
+    form_class = ReasonForm
+    template_name = 'components/create_update_model.html'
+    success_url = reverse_lazy('list_reason')
+
+
+class ListReasonView(CreateContextMixin, ListView):
+    model = Reason
+    context_object_name = 'object_list'
+    template_name = 'components/list.html'
+
+
+class UpdateReasonView(CreateContextMixin, UpdateView):
+    model = Reason
+    form_class = ReasonForm
+    template_name = 'components/create_update_model.html'
+    success_url = reverse_lazy('list_reason')

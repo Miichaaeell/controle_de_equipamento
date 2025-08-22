@@ -4,11 +4,11 @@
     :class="open ? 'w-64' : 'w-20'"
 >
     <!-- Header do Sidebar -->
-    <div class="flex items-center justify-between p-4 border-b">
-        <span class="text-xl font-bold truncate" x-show="open">📋 Controle</span>
+    <div class="flex items-center justify-between p-3 border-b">
+        <span class="text-xl font-bold truncate items-center gap-3 px-3 py-2" x-show="open">📋 Menu</span>
         <button 
             @click="open = !open"
-            class="p-2 rounded hover:bg-gray-200"
+            class="p-2 rounded hover:bg-gray-700 items-center gap-3 px-3 py-2"
         >
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
@@ -18,34 +18,34 @@
 
     <!-- Navegação -->
     <nav class="flex-1 p-4 space-y-2">
-        <a href="{% url 'dashboard' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 transition">
+        <a href="{% url 'dashboard' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
             📊 <span x-show="open">Dashboards</span>
         </a>
-        <a href="{% url 'stock' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 transition">
+        <a href="{% url 'stock' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
             📋 <span x-show="open">Controle de equipamento</span>
         </a>
-        <a href="{% url 'tracking' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 transition">
+        <a href="{% url 'tracking' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
             📈 <span x-show="open">Rastreamento</span>
         </a>
-        <a href="{% url 'list_equipment' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 transition">
+        <a href="{% url 'list_equipment' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
             🧰 <span x-show="open"> Equipamento</span>
         </a>
-        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 transition">
+        <a href="{% url 'list_reason' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
             📝 <span x-show="open">Motivos</span>
         </a>
-        <a href="{% url 'list_category' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 transition">
+        <a href="{% url 'list_category' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
             ⚖️ <span x-show="open">Categorias de equipamento</span>
         </a>
-        <a href=" {% url 'list_brand' %} " class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 transition">
+        <a href=" {% url 'list_brand' %} " class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
             🏷️ <span x-show="open">Marcas de Equipamento</span>
         </a>
-        <a href="{% url 'list_modelequipment' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 transition">
+        <a href="{% url 'list_modelequipment' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
             ⚙️ <span x-show="open">Modelos de Equipamento</span>
         </a>
-        <a href="{% url 'list_statusequipment' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 transition">
+        <a href="{% url 'list_statusequipment' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
             ✅ <span x-show="open">Status de Equipamento</span>
         </a>
-        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-100 transition">
+        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
             👤 <span x-show="open">Meu Perfil</span>
         </a>
     </nav>

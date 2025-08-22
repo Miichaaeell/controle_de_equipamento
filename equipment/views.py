@@ -11,7 +11,7 @@ class CreateEquipmentView(FormValidMixin, CreateContextMixin, CreateView):
     model = Equipment
     form_class = EquipmentForm
     template_name = 'components/create_update_model.html'
-    success_url = reverse_lazy('stock')
+    success_url = reverse_lazy('list_equipment')
 
 
 class ListEquipmentView(CreateContextMixin, ListView):
@@ -33,7 +33,7 @@ class CreateBrandView(FormValidMixin, CreateContextMixin, CreateView):
     model = Brand
     form_class = BrandForm
     template_name = 'components/create_update_model.html'
-    success_url = reverse_lazy('stock')
+    success_url = reverse_lazy('list_brand')
 
 
 class ListBrandView(CreateContextMixin, ListView):
