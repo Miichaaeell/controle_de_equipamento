@@ -1,13 +1,21 @@
 from django.views.generic import View
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-# Create your views here.
+from datetime import datetime
 
 
 class LoginView(View):
+    hour = datetime.now().time().hour
+    if hour > 0 and hour < 12:
+        saudacao = 'Bom dia'
+    elif hour >= 12 and hour < 18:
+        saudacao = 'Boa Tarde'
+    elif hour >= 18 and hour <= 23:
+        saudacao = 'Boa Noite'
+
     def get(self, request, *args, **kwargs):
         context = {
-            'saudacao': 'Bom dia'
+            'saudacao': self.saudacao
         }
         return render(request, 'login.html', context)
 
@@ -21,7 +29,7 @@ class LoginView(View):
 
         else:
             context = {
-                'saudacao': 'Bom dia',
+                'saudacao': self.saudacao,
                 'erro': 'Usuário ou Senha inválidos'
             }
             return render(request, 'login.html', context)
