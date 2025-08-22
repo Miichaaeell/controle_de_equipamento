@@ -5,13 +5,45 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, View, UpdateView, CreateView
 from core.mixins import FormValidMixin, CreateContextMixin
 from .models import ControllerStock, Location, Tracking, Reason
+from equipment.models import StatusEquipment, Category
 from .forms import ControllerStockForm, ReasonForm
 
 
 # View Dashboard
 class DashboardView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
-        return render(request, 'dashboard.html')
+        data = ControllerStock.objects.all()
+        inactives = data.filter(
+            equipment__status=StatusEquipment.objects.get(status__icontains='inativo')).count()
+        actives = data.count() - inactives
+        stock = data.filter(location=Location.objects.get(
+            location__icontains='estoque'))
+        clients = data.filter(location=Location.objects.get(
+            location__icontains='cliente'))
+        technical = data.filter(location=Location.objects.get(
+            type__icontains='tecnico'))
+        onu_integration = data.filter(equipment__category=Category.objects.get(
+            category__icontains='ONU Integrada'))
+        onu = data.filter(equipment__category=Category.objects.get(
+            category='ONU'))
+        routers = data.filter(equipment__category=Category.objects.get(
+            category__icontains='roteador'))
+        casa_on = data.filter(equipment__category=Category.objects.get(
+            category__icontains='casa on'))
+        context = {
+            'metrics': {
+                'inactives': inactives,
+                'actives': actives,
+                'stock': stock.count(),
+                'clients': clients.count(),
+                'technical': technical.count(),
+                'onu_integration': onu_integration.count(),
+                'onu': onu.count(),
+                'routers': routers.count(),
+                'casa_on': casa_on.count()
+            }
+        }
+        return render(request, 'dashboard.html', context)
 
 
 # Views Controller

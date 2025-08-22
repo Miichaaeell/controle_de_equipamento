@@ -1,4 +1,5 @@
 {% extends '_base.html' %}
+{% load static %}
 
 {% block title %}Dashboard{% endblock %}
 
@@ -14,7 +15,7 @@
         <div class="bg-gray-800 rounded-2xl shadow p-6 flex items-center justify-between hover:scale-105 transition">
             <div>
                 <p class="text-gray-400">Equipamentos Ativos</p>
-                <h2 class="text-2xl font-bold text-green-400">980</h2>
+                <h2 class="text-2xl font-bold text-green-400">{{metrics.actives}}</h2>
             </div>
             <span class="text-4xl">✅</span>
         </div>
@@ -23,7 +24,7 @@
         <div class="bg-gray-800 rounded-2xl shadow p-6 flex items-center justify-between hover:scale-105 transition">
             <div>
                 <p class="text-gray-400">Equipamentos Inativos</p>
-                <h2 class="text-2xl font-bold text-red-400">120</h2>
+                <h2 class="text-2xl font-bold text-red-400">{{metrics.inactives}}</h2>
             </div>
             <span class="text-4xl">❌</span>
         </div>
@@ -32,7 +33,7 @@
         <div class="bg-gray-800 rounded-2xl shadow p-6 flex items-center justify-between hover:scale-105 transition">
             <div>
                 <p class="text-gray-400">Em Estoque</p>
-                <h2 class="text-2xl font-bold text-blue-400">300</h2>
+                <h2 class="text-2xl font-bold text-blue-400">{{metrics.stock}}</h2>
             </div>
             <span class="text-4xl">📦</span>
         </div>
@@ -41,7 +42,7 @@
         <div class="bg-gray-800 rounded-2xl shadow p-6 flex items-center justify-between hover:scale-105 transition">
             <div>
                 <p class="text-gray-400">Em Cliente</p>
-                <h2 class="text-2xl font-bold text-yellow-400">450</h2>
+                <h2 class="text-2xl font-bold text-yellow-400">{{metrics.clients}}</h2>
             </div>
             <span class="text-4xl">👨‍💼</span>
         </div>
@@ -50,7 +51,7 @@
         <div class="bg-gray-800 rounded-2xl shadow p-6 flex items-center justify-between hover:scale-105 transition">
             <div>
                 <p class="text-gray-400">Com Técnico</p>
-                <h2 class="text-2xl font-bold text-purple-400">80</h2>
+                <h2 class="text-2xl font-bold text-purple-400">{{metrics.technical}}</h2>
             </div>
             <span class="text-4xl">👷🏽</span>
         </div>
@@ -71,10 +72,11 @@
         </div>
     </div>
 </div>
-
+{{ metrics|json_script:"metrics-data" }}
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+    const metrics = JSON.parse(document.getElementById("metrics-data").textContent);
     // Gráfico de Pizza (Distribuição de status)
     const ctx1 = document.getElementById('statusChart');
     new Chart(ctx1, {
@@ -82,7 +84,7 @@
         data: {
             labels: ['Ativos', 'Inativos', 'Estoque', 'Cliente', 'Técnico'],
             datasets: [{
-                data: [980, 120, 300, 450, 80],
+                data: [metrics.actives, metrics.inactives, metrics.stock, metrics.clients, metrics.technical],
                 backgroundColor: ['#22c55e', '#ef4444', '#3b82f6', '#eab308', '#a855f7'],
             }]
         },
@@ -100,10 +102,10 @@
     new Chart(ctx2, {
         type: 'bar',
         data: {
-            labels: ['ONU', 'Roteadores', 'Switches', 'STB', 'Outros'],
+            labels: ['ONU', 'ONU Itegrada', 'Roteadores', 'CASA ON'],
             datasets: [{
                 label: 'Quantidade',
-                data: [320, 210, 150, 80, 60],
+                data: [metrics.onu, metrics.onu_integration, metrics.routers, metrics.casa_on],
                 backgroundColor: '#3b82f6',
             }]
         },
