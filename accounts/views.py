@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from datetime import datetime
-from core.mixins import CreateContextMixin
 
 
 class LoginView(View):
@@ -53,4 +52,23 @@ class PasswordChangeView(View):
         return render(request, 'change_password.html')
 
     def post(self, request, *args, **kwargs):
-        return redirect('logout')
+        user = User.objects.get(id=request.user.id)
+        old_password = request.POST['old_password']
+        validation_password = user.check_password(old_password)
+        if validation_password:
+            new_password = request.POST['new_password']
+            confirmation_password = request.POST['confirmation_passowrd']
+            if new_password == confirmation_password:
+                user.set_password(new_password)
+                user.save()
+                return redirect('logout')
+            else:
+                context = {
+                    'error': 'As senhas não são iguais'
+                }
+                return render(request, 'change_password.html', context)
+        else:
+            context = {
+                'erro': 'Senha atual não confere'
+            }
+            return render(request, 'change_password.html', context)
