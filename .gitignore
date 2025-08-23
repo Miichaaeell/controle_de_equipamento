@@ -1,33 +1,33 @@
-env
+venv
 .env
-__pycache__
 
-**/migrations/*.py
-**/migrations/*.pyc
+# Arquivos de cache
+__pycache__/
+**/__pycache__/
+
+# Migrations (ignora todos, menos __init__.py)
+**/migrations/
 !**/migrations/__init__.py
 
+# Banco local
 db.sqlite3
-.db
+*.db
+
+# Media / uploads
+/media/
+logos/
+DataBase/
+
+# Static
+/static/jazzmin/
+/static/vendor/
 
 .vscode
 .idea
 
 tests/__pycache__/
 
-media
-media/logos
-logos
-DataBase/
 
-docker-compose.dev.yml
-entrypoint_dev.sh
 
-agent_test.py
-test_agent.py
 
-docker-compose.dev.yml
-entrypoint_dev.sh
 
-static/jazzmin/
-static/vendor/
-nginx.conf
