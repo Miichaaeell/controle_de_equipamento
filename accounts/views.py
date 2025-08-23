@@ -1,7 +1,9 @@
-from django.views.generic import View
+from django.views.generic import View, DetailView, UpdateView
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from datetime import datetime
+from core.mixins import CreateContextMixin
 
 
 class LoginView(View):
@@ -39,3 +41,16 @@ class LogoutView(View):
     def get(self, request, *args, **Kwargs):
         logout(request)
         return redirect('login')
+
+
+class DetailAccountView(DetailView):
+    model = User
+    template_name = 'detail_account.html'
+
+
+class PasswordChangeView(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, 'change_password.html')
+
+    def post(self, request, *args, **kwargs):
+        return redirect('logout')

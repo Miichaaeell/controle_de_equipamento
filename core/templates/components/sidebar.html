@@ -45,7 +45,7 @@
         <a href="{% url 'list_statusequipment' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
             ✅ <span x-show="open">Status de Equipamento</span>
         </a>
-        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
+        <a href="{% url 'detail_account' user.id %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
             👤 <span x-show="open">Meu Perfil</span>
         </a>
         <a href="{% url 'logout' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
