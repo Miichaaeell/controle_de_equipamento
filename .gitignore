@@ -15,7 +15,7 @@ db.sqlite3
 
 # Media / uploads
 /media/
-logos/
+logo/
 DataBase/
 
 # Static
