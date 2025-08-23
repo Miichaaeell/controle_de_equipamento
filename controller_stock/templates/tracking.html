@@ -51,18 +51,6 @@
     </div>
 
     <!-- Paginação -->
-    {% if is_paginated %}
-        <div class="mt-6 flex justify-center space-x-2">
-            {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}&q={{ request.GET.q }}&location={{ request.GET.location }}" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Anterior</a>
-            {% endif %}
-
-            <span class="px-4 py-2 bg-blue-600 text-white rounded">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
-
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}&q={{ request.GET.q }}&location={{ request.GET.location }}" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Próxima</a>
-            {% endif %}
-        </div>
-    {% endif %}
+    {% include 'components/pagination.html' %}
 </div>
 {% endblock %}

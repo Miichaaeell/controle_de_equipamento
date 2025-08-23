@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, View, UpdateView, CreateView
-from core.mixins import FormValidMixin, CreateContextMixin
+from core.mixins import FormValidMixin, CreateContextMixin, FilterQuerySetMixin
 from .models import ControllerStock, Location, Tracking, Reason
 from equipment.models import StatusEquipment, Category
 from .forms import ControllerStockForm, ReasonForm
@@ -13,67 +13,58 @@ from .forms import ControllerStockForm, ReasonForm
 class DashboardView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         data = ControllerStock.objects.all()
-        inactives = data.filter(
-            equipment__status=StatusEquipment.objects.get(status__icontains='inativo')).count()
-        actives = data.count() - inactives
-        stock = data.filter(location=Location.objects.get(
-            location__icontains='estoque'))
-        clients = data.filter(location=Location.objects.get(
-            location__icontains='cliente'))
-        technical = data.filter(location=Location.objects.get(
-            type__icontains='tecnico'))
-        onu_integration = data.filter(equipment__category=Category.objects.get(
-            category__icontains='ONU Integrada'))
-        onu = data.filter(equipment__category=Category.objects.get(
-            category='ONU'))
-        routers = data.filter(equipment__category=Category.objects.get(
-            category__icontains='roteador'))
-        casa_on = data.filter(equipment__category=Category.objects.get(
-            category__icontains='casa on'))
-        context = {
-            'metrics': {
-                'inactives': inactives,
-                'actives': actives,
-                'stock': stock.count(),
-                'clients': clients.count(),
-                'technical': technical.count(),
-                'onu_integration': onu_integration.count(),
-                'onu': onu.count(),
-                'routers': routers.count(),
-                'casa_on': casa_on.count()
+        if data:
+            inactives = data.filter(
+                equipment__status=StatusEquipment.objects.get(status__icontains='inativo')).count()
+            actives = data.count() - inactives
+            stock = data.filter(location=Location.objects.get(
+                location__icontains='estoque'))
+            clients = data.filter(location=Location.objects.get(
+                location__icontains='cliente'))
+            technical = data.filter(location=Location.objects.get(
+                type__icontains='tecnico'))
+            onu_integration = data.filter(equipment__category=Category.objects.get(
+                category__icontains='ONU Integrada'))
+            onu = data.filter(equipment__category=Category.objects.get(
+                category='ONU'))
+            routers = data.filter(equipment__category=Category.objects.get(
+                category__icontains='roteador'))
+            casa_on = data.filter(equipment__category=Category.objects.get(
+                category__icontains='casa on'))
+            context = {
+                'metrics': {
+                    'inactives': inactives if inactives else 0,
+                    'actives': actives if actives else 0,
+                    'stock': stock.count() if stock else 0,
+                    'clients': clients.count() if clients else 0,
+                    'technical': technical.count() if technical else 0,
+                    'onu_integration': onu_integration.count() if onu_integration else 0,
+                    'onu': onu.count() if onu else 0,
+                    'routers': routers.count() if routers else 0,
+                    'casa_on': casa_on.count() if casa_on else 0,
+                }
             }
-        }
+        else:
+            context = {
+                'metrics': {
+                    'inactives': 0,
+                    'actives': 0,
+                    'stock': 0,
+                    'clients': 0,
+                    'technical': 0,
+                    'onu_integration': 0,
+                    'onu': 0,
+                    'routers': 0,
+                    'casa_on': 0,
+                }}
         return render(request, 'dashboard.html', context)
 
 
 # Views Controller
-class ControllerStockView(LoginRequiredMixin, ListView):
+class ControllerStockView(LoginRequiredMixin, FilterQuerySetMixin, CreateContextMixin, ListView):
     model = ControllerStock
     template_name = 'controller_stock.html'
-    paginate_by = 20
-
-    def get_context_data(self, **kwargs):
-        locations = Location.objects.all()
-        context = super().get_context_data(**kwargs)
-        context['locations'] = locations
-        return context
-
-    def get_queryset(self):
-        query_set = super().get_queryset()
-        search = self.request.GET.get('search')
-        location = self.request.GET.get('location')
-        if search:
-            query_set = query_set.filter(
-                Q(equipment__mac_address__icontains=search) |
-                Q(equipment__serial_number__icontains=search)
-            )
-        if location:
-            filter = Location.objects.get(location=location)
-            query_set = query_set.filter(
-                location=filter
-            )
-
-        return query_set
+    paginate_by = 10
 
 
 class UpdateControllerStockView(LoginRequiredMixin, FormValidMixin, CreateContextMixin, UpdateView):
@@ -92,26 +83,10 @@ class UpdateControllerStockView(LoginRequiredMixin, FormValidMixin, CreateContex
 
 
 # View Tracking
-class TrackingView(LoginRequiredMixin, ListView):
+class TrackingView(LoginRequiredMixin, FilterQuerySetMixin, ListView):
     model = Tracking
     template_name = 'tracking.html'
-    paginate_by = 20
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        locations = Location.objects.all()
-        context['locations'] = locations
-        return context
-
-    def get_queryset(self):
-        query_set = super().get_queryset()
-        search = self.request.GET.get('search')
-        if search:
-            query_set = query_set.filter(
-                Q(equipment__mac_address__icontains=search) |
-                Q(equipment__serial_number__icontains=search)
-            )
-        return query_set
+    paginate_by = 10
 
 
 # Views Reason
