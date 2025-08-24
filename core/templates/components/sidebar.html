@@ -18,38 +18,77 @@
 
     <!-- Navegação -->
     <nav class="flex-1 p-4 space-y-2">
-        <a href="{% url 'dashboard' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
+        
+        {% if perms.controller_stock.view_controllerstock %}
+            <a href="{% url 'dashboard' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
             📊 <span x-show="open">Dashboards</span>
         </a>
-        <a href="{% url 'stock' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
+        {% endif %}
+            
+        
+        {% if perms.controller_stock.view_controllerstock %}
+            <a href="{% url 'stock' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
             📋 <span x-show="open">Controle de equipamento</span>
         </a>
-        <a href="{% url 'tracking' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
+        {% endif %}
+            
+        
+        {% if perms.controller_stock.view_tracking %}
+            <a href="{% url 'tracking' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
             📈 <span x-show="open">Rastreamento</span>
-        </a>
-        <a href="{% url 'list_equipment' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
+            </a>
+        {% endif %}
+            
+        
+        {% if perms.equipment.view_equipment %}
+            <a href="{% url 'list_equipment' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
             🧰 <span x-show="open"> Equipamento</span>
         </a>
-        <a href="{% url 'list_reason' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
+        {% endif %}
+            
+        
+        {% if perms.controller_stock.view_reason %}
+            <a href="{% url 'list_reason' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
             📝 <span x-show="open">Motivos</span>
         </a>
-        <a href="{% url 'list_category' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
+        {% endif %}
+            
+        
+        {% if perms.equipment.view_category %}
+            <a href="{% url 'list_category' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
             ⚖️ <span x-show="open">Categorias de equipamento</span>
         </a>
-        <a href=" {% url 'list_brand' %} " class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
+        {% endif %}
+            
+        
+        {% if perms.equipment.view_brand %}
+            <a href=" {% url 'list_brand' %} " class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
             🏷️ <span x-show="open">Marcas de Equipamento</span>
         </a>
-        <a href="{% url 'list_modelequipment' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
+        {% endif %}
+            
+        
+        {% if perms.equipment.view_modelequipment %}
+            <a href="{% url 'list_modelequipment' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
             ⚙️ <span x-show="open">Modelos de Equipamento</span>
         </a>
-        <a href="{% url 'list_statusequipment' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
+        {% endif %}
+            
+        
+        {% if perms.equipment.view_statusequipment %}
+            <a href="{% url 'list_statusequipment' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
             ✅ <span x-show="open">Status de Equipamento</span>
         </a>
-        <a href="{% url 'detail_account' user.id %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
+        {% endif %}            
+        
+            <a href="{% url 'detail_account' user.id %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
             👤 <span x-show="open">Meu Perfil</span>
         </a>
-        <a href="{% url 'logout' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
+            
+            <a href="{% url 'logout' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
             🔚<span x-show="open">Sair</span>
         </a>
+
+            
     </nav>
 </aside>
