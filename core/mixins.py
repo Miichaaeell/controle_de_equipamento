@@ -1,4 +1,4 @@
-from controller_stock.models import Location
+from controller_stock.models import Location, Reason
 from django.db.models import Q
 
 
@@ -11,9 +11,15 @@ class FormValidMixin:
         form = super().get_form(form_class)
         user = self.request.user
         if self.request.user.groups.filter(name='Tecnico').exists():
-            form.fields['location'].queryset = Location.objects.filter(Q(type__icontains='cliente') |
-                                                                       Q(type__icontains='estoque') |
-                                                                       Q(user=self.request.user))
+            form.fields['location'].queryset = Location.objects.filter(
+                Q(type__icontains='cliente') |
+                Q(type__icontains='estoque') |
+                Q(user=self.request.user))
+            form.fields['reason'].queryset = Reason.objects.filter(
+                Q(reason__icontains='troca') |
+                Q(reason__icontains='implanta') |
+                Q(reason__icontains='desativa')
+            )
         else:
             form.fields["location"].queryset = Location.objects.all()
 
