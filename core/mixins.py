@@ -7,6 +7,18 @@ class FormValidMixin:
         form.instance.responsible = self.request.user
         return super().form_valid(form)
 
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        user = self.request.user
+        if self.request.user.groups.filter(name='Tecnico').exists():
+            form.fields['location'].queryset = Location.objects.filter(Q(type__icontains='cliente') |
+                                                                       Q(type__icontains='estoque') |
+                                                                       Q(user=self.request.user))
+        else:
+            form.fields["location"].queryset = Location.objects.all()
+
+        return form
+
 
 class CreateContextMixin:
     def get_context_data(self, **kwargs):
@@ -16,13 +28,15 @@ class CreateContextMixin:
         context['sufix_url'] = sufix_url.lower()
         locations = Location.objects.all()
         context['locations'] = locations
+        if self.request.user.groups.filter(name__icontains='tecnico'):
+            context['is_technical'] = True
         return context
 
 
 class FilterQuerySetMixin:
     def get_queryset(self):
         query_set = super().get_queryset()
-        if self.request.user.groups.filter(name='Técnico').exists():
+        if self.request.user.groups.filter(name='Tecnico').exists():
             thecnical = Location.objects.get(user=self.request.user)
             query_set = query_set.filter(location=thecnical)
         try:

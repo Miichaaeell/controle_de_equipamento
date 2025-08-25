@@ -4,10 +4,13 @@
 {% block content %}
 <div class="container mx-auto p-6">
     <h1 class="text-2xl font-bold mb-6">📋 Controle dos Equipamentos</h1>
-    
-    {% include 'components/search.html' %}
     <!-- Barra de busca e filtro -->
-    {% include 'components/filter.html' %}
+    {% include 'components/search.html' %}    
+    {% if not is_technical %}
+         {% include 'components/filter.html' %}
+    {% endif %}
+        
+   
 
     <!-- Tabela de resultados -->
     <div class="overflow-x-auto shadow-md rounded-lg">
