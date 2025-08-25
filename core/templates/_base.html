@@ -26,7 +26,7 @@
                     Controle de Equipamentos
                 </h1>
                 <div>
-                    <img src="{% static 'image/logo/logo_cosmonet_transparent.png' %}" alt="CosmoNet Logo"
+                    <img src="{% static url_logo %}" alt="Logo Empresa"
                          class="h-10 object-contain w-80 ">
                 </div>
             </header>
@@ -44,7 +44,7 @@
 
     <!-- Footer fixo -->
     <footer class="bg-gray-800 py-4 text-center text-gray-400">
-        &copy; {{ year|default:"2025" }} - Sistema de Controle de Equipamentos | CosmoNet Fibra
+        &copy; {{ year|default:"2025" }} - Sistema de Controle de Equipamentos | {{ enterprise_name }}
     </footer>
 
 </body>

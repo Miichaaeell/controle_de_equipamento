@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - CosmoNet</title>
+  <title>Login - {{enterprise_name}}</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900">
@@ -17,7 +17,7 @@
   <!-- Card de Login -->
   <div class="relative z-10 w-full max-w-md p-8 rounded-2xl shadow-lg bg-gray-700/80">
     <div class="p-2 mb-3 center">
-        <img src="{% static 'image/logo/logo_cosmonet_transparent.png' %}" alt="CosmoNet Logo"
+        <img src="{% static url_logo %}" alt="CosmoNet Logo"
                 class="h-10 object-contain mx-auto">
     </div>
     <!-- Saudação -->
@@ -55,7 +55,7 @@
 
     <!-- Rodapé -->
     <p class="text-center text-gray-400 text-sm mt-6">
-      © {{ year|default:"2025" }} CosmoNet Fibra
+      © {{ year|default:"2025" }} {{enterprise_name}}
     </p>
   </div>
 </div>

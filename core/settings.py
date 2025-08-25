@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -72,6 +73,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'core.context_processors.global_context'
             ],
         },
     },
@@ -139,13 +141,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 JAZZMIN_SETTINGS = {
-    'site_title': 'Estoque Cosmonet',
+    'site_title': 'Estoque ' + config("ENTERPRISE_NAME"),
     'site_header': 'Estoque',
     "site_brand": "Estoque",
-    'site_logo': 'image/logo/logo_cosmonet.jpg',
-    'login_logo': 'image/logo/logo_cosmonet.jpg',
-    "welcome_sign": "Bem Vindo ao Estoque Cosmonet",
-    "copyright": "COSMONET LTDA",
+    'site_logo': config('URL_LOGO'),
+    'login_logo': config('URL_LOGO'),
+    "welcome_sign": f"Bem Vindo ao Estoque {config("ENTERPRISE_NAME")}",
+    "copyright": config("ENTERPRISE_NAME"),
     "search_model": ["auth.User", 'controller_stock.ControllerStock'],
     "icons": {
         "auth": "fas fa-users-cog",

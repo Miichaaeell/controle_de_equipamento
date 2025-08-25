@@ -7,21 +7,24 @@ class FormValidMixin:
         form.instance.responsible = self.request.user
         return super().form_valid(form)
 
+    filter_technical = False
+
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        user = self.request.user
-        if self.request.user.groups.filter(name='Tecnico').exists():
-            form.fields['location'].queryset = Location.objects.filter(
-                Q(type__icontains='cliente') |
-                Q(type__icontains='estoque') |
-                Q(user=self.request.user))
-            form.fields['reason'].queryset = Reason.objects.filter(
-                Q(reason__icontains='troca') |
-                Q(reason__icontains='implanta') |
-                Q(reason__icontains='desativa')
-            )
-        else:
-            form.fields["location"].queryset = Location.objects.all()
+        if self.filter_technical == True:
+            user = self.request.user
+            if self.request.user.groups.filter(name='Tecnico').exists():
+                form.fields['location'].queryset = Location.objects.filter(
+                    Q(type__icontains='cliente') |
+                    Q(type__icontains='estoque') |
+                    Q(user=self.request.user))
+                form.fields['reason'].queryset = Reason.objects.filter(
+                    Q(reason__icontains='troca') |
+                    Q(reason__icontains='implanta') |
+                    Q(reason__icontains='desativa')
+                )
+            else:
+                form.fields["location"].queryset = Location.objects.all()
 
         return form
 

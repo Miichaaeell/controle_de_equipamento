@@ -13,7 +13,7 @@ class DashboardView(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = [
         'controller_stock.view_controllerstock',
         'controller_stock.add_controllerstock',
-        ]
+    ]
     permission_denied_message = 'Você não tem autorização para acessar está página'
 
     def get(self, request, *args, **kwargs):
@@ -38,6 +38,7 @@ class UpdateControllerStockView(LoginRequiredMixin, PermissionRequiredMixin, For
     permission_required = 'controller_stock.change_controllerstock'
     success_url = reverse_lazy('stock')
     permission_denied_message = 'Você não tem autorização para acessar está página'
+    filter_technical = True
 
     def get_initial(self):
         initial = super().get_initial()
