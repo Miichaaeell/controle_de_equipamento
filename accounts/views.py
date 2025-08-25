@@ -26,7 +26,7 @@ class LoginView(View):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            if user.has_perm('controller_stock.view_controllerstock') and user.has_perm('controller_stock.add_controllerstock'):
+            if user.has_perm('controller_stock.view_controllerstock') and not user.groups.filter(name__icontains='tecnico'):
                 return redirect('dashboard')
             else:
                 return redirect('stock')

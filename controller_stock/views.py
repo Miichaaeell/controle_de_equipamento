@@ -12,7 +12,6 @@ from .functions import get_metrics
 class DashboardView(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = [
         'controller_stock.view_controllerstock',
-        'controller_stock.add_controllerstock',
     ]
     permission_denied_message = 'Você não tem autorização para acessar está página'
 
