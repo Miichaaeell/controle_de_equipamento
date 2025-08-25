@@ -23,7 +23,11 @@
                         <tr class="hover:bg-gray-800">
                             
                             <td class="px-4 py-2 text-sm">
-                                {{ obj }} {{ obj.mac_address}}
+                                {{ obj|upper }} 
+                                {% if obj.mac_address %}
+                                    - Mac: {{ obj.mac_address}}
+                                {% endif %}
+                                     
                             </td>
                             
                             <td class="px-4 py-2 text-right space-x-2">

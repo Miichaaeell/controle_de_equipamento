@@ -22,6 +22,9 @@ class CreateContextMixin:
 class FilterQuerySetMixin:
     def get_queryset(self):
         query_set = super().get_queryset()
+        if self.request.user.groups.filter(name='Técnico').exists():
+            thecnical = Location.objects.get(user=self.request.user)
+            query_set = query_set.filter(location=thecnical)
         try:
             search = self.request.GET.get('search')
         except:
