@@ -30,6 +30,8 @@ class FormValidMixin:
 
 
 class CreateContextMixin:
+    add_filter = False
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = f'{self.model._meta.verbose_name}'
@@ -39,6 +41,7 @@ class CreateContextMixin:
         context['locations'] = locations
         if self.request.user.groups.filter(name__icontains='tecnico'):
             context['is_technical'] = True
+        context['add_filter'] = self.add_filter
         return context
 
 
