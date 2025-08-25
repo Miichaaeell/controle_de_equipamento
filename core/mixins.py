@@ -57,10 +57,16 @@ class FilterQuerySetMixin:
         except:
             pass
         if search:
-            query_set = query_set.filter(
-                Q(equipment__mac_address__icontains=search) |
-                Q(equipment__serial_number__icontains=search)
-            )
+            try:
+                query_set = query_set.filter(
+                    Q(equipment__mac_address__icontains=search) |
+                    Q(equipment__serial_number__icontains=search)
+                )
+            except:
+                query_set = query_set.filter(
+                    Q(mac_address__icontains=search) |
+                    Q(serial_number__icontains=search)
+                )
         if location:
             filter = Location.objects.get(location=location)
             query_set = query_set.filter(

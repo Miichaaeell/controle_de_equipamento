@@ -6,15 +6,16 @@
 {% block content %}
 <div class="container mx-auto p-6">
     <h1 class="text-2xl font-bold mb-6">📋 Lista de {{ title }}</h1>
+    {% include 'components/search.html' %}
 
-    <div class="p-6 rounded-lg shadow-md">
+    <div class="overflow-x-auto shadow-md rounded-lg">
         {% if object_list %}
-            <table class="min-w-full border border-gray-200 rounded-lg">
+            <table class="min-w-full text-left border-collapse">
                 <thead class="bg-gray-800">
                     <tr> 
                         <th class="px-4 py-2 text-left text-sm font-semibold">
                             {{ title }}
-                        </th>                        
+                        </th>                      
                         <th class="px-4 py-2 text-right text-sm font-semibold">Ações</th>
                     </tr>
                 </thead>
@@ -22,19 +23,15 @@
                     {% for obj in object_list %}
                         <tr class="hover:bg-gray-800">
                             
-                            <td class="px-4 py-2 text-sm">
-                                {{ obj|upper }} 
-                                {% if obj.mac_address %}
-                                    - Mac: {{ obj.mac_address}}
-                                {% endif %}
-                                     
+                            <td class="px-4 py-2 text-sm flex justify-between">
+                                <span>{{ obj|upper }} </span>                                                          
+                             {% if obj.mac_address %}
+                                <span class="text-right">Mac Address - {{ obj.mac_address}}</span>
+                            {% endif %}
                             </td>
-                            
                             <td class="px-4 py-2 text-right space-x-2">
                                 <a href="{% url 'update_'|add:sufix_url obj.id %}" 
                                    class="px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">Editar</a>
-                                <a href="#" 
-                                   class="px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm">Excluir</a>
                             </td>
                         </tr>
                     {% endfor %}

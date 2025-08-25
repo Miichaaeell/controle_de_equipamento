@@ -1,6 +1,6 @@
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView
-from core.mixins import FormValidMixin, CreateContextMixin
+from core.mixins import FormValidMixin, CreateContextMixin, FilterQuerySetMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from .models import Equipment, Brand, ModelEquipment, Category, StatusEquipment
 from .forms import EquipmentForm, BrandForm, ModelEquipmentForm, CategoryForm, StatusEquipmentForm
@@ -16,7 +16,7 @@ class CreateEquipmentView(LoginRequiredMixin, PermissionRequiredMixin,  FormVali
     permission_denied_message = 'Você não tem autorização para acessar está página'
 
 
-class ListEquipmentView(LoginRequiredMixin, PermissionRequiredMixin, CreateContextMixin, ListView):
+class ListEquipmentView(LoginRequiredMixin, PermissionRequiredMixin, CreateContextMixin, FilterQuerySetMixin, ListView):
     model = Equipment
     template_name = 'components/list.html'
     context_object_name = "object_list"
