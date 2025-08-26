@@ -2,10 +2,12 @@ from controller_stock.models import ControllerStock, Reason, Location
 
 
 def create_controller_stock(instance):
+    location, _ = Location.objects.get_or_create(location='ESTOQUE')
+    reason, _ = Reason.objects.get_or_create(reason='ENTRADA')
     ControllerStock.objects.create(
         equipment=instance,
-        location=Location.objects.get(location__icontains='estoque'),
-        reason=Reason.objects.get(reason__icontains='entrada'),
+        location=location,
+        reason=reason,
         observation='Equipamento adicionado ao estoque',
         responsible=instance.responsible,
     )

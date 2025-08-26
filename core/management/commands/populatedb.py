@@ -41,48 +41,52 @@ class Command(BaseCommand):
         categories_cache = {}
         models_cache = {}
 
-        responsible = User.objects.get(username='michael')
-        # 3 - Criar brand, Category, Modelos e Equipamento
-        for _ in range(200):
-            for item in base_list:
-                try:
-                    brand = brands_cache.get(
-                        item['brand'])
-                    if not brand:
-                        brand = Brand.objects.create(brand=item['brand'])
-                        brands_cache[item['brand']] = brand
+        responsible = User.objects.all().order_by('date_joined').first()
 
-                    category = categories_cache.get(item['category'])
-                    if not category:
-                        category = Category.objects.create(
-                            category=item['category'])
-                        categories_cache[item['category']] = category
+        if responsible:
+            # 3 - Criar brand, Category, Modelos e Equipamento
+            for _ in range(200):
+                for item in base_list:
+                    try:
+                        brand = brands_cache.get(
+                            item['brand'])
+                        if not brand:
+                            brand = Brand.objects.create(brand=item['brand'])
+                            brands_cache[item['brand']] = brand
 
-                    model_equipment = models_cache.get(item['model'])
-                    if not model_equipment:
-                        model_equipment = ModelEquipment.objects.create(
-                            model=item['model'],
+                        category = categories_cache.get(item['category'])
+                        if not category:
+                            category = Category.objects.create(
+                                category=item['category'])
+                            categories_cache[item['category']] = category
+
+                        model_equipment = models_cache.get(item['model'])
+                        if not model_equipment:
+                            model_equipment = ModelEquipment.objects.create(
+                                model=item['model'],
+                                brand=brand,
+                            )
+                            models_cache[item['model']] = model_equipment
+
+                        equipments_to_create.append(Equipment(
                             brand=brand,
-                        )
-                        models_cache[item['model']] = model_equipment
+                            model=model_equipment,
+                            category=category,
+                            mac_address=':'.join(
+                                uuid.uuid4().hex[:12][i:i+2] for i in range(0, 12, 2)).upper(),
+                            serial_number=uuid.uuid4().hex[:12].upper(),
+                            status=status_active,
+                            responsible=responsible
+                        ))
 
-                    equipments_to_create.append(Equipment(
-                        brand=brand,
-                        model=model_equipment,
-                        category=category,
-                        mac_address=':'.join(
-                            uuid.uuid4().hex[:12][i:i+2] for i in range(0, 12, 2)).upper(),
-                        serial_number=uuid.uuid4().hex[:12].upper(),
-                        status=status_active,
-                        responsible=responsible
-                    ))
-
-                except Exception as e:
-                    print(e)
-        Equipment.objects.bulk_create(equipments_to_create)
-        print(
-            f'✅ database successfully populated with {len(equipments_to_create)} registers')
-        for equipment in equipments_to_create:
-            create_controller_stock(instance=equipment)
-        print(
-            f'✅ controller stock database successfully populated with {len(equipments_to_create)} registers')
+                    except Exception as e:
+                        print(e)
+            Equipment.objects.bulk_create(equipments_to_create)
+            print(
+                f'✅ database successfully populated with {len(equipments_to_create)} registers')
+            for equipment in equipments_to_create:
+                create_controller_stock(instance=equipment)
+            print(
+                f'✅ controller stock database successfully populated with {len(equipments_to_create)} registers')
+        else:
+            print(f'Nenhum usuário cadastrado, para prosseguir, cadastre um usuário')
