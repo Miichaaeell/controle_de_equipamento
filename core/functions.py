@@ -15,9 +15,9 @@ def create_controller_stock(instance):
 
 def get_metrics(data):
     inactives = data.filter(
-        equipment__status__status__contains='Inativo')
+        equipment__status__status__iexact='inativo')
     actives = data.filter(
-        equipment__status__status__contains='Ativo')
+        equipment__status__status__iexact='ativo')
     stock = data.filter(location__location__icontains='estoque')
     clients = data.filter(location__location__icontains='cliente')
     technical = data.filter(location__type__icontains='tecnico')
