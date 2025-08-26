@@ -1,9 +1,12 @@
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, UpdateView
+from django.shortcuts import redirect
+from django.contrib import messages
+from django.views.generic import CreateView, ListView, UpdateView, View
 from core.mixins import FormValidMixin, CreateContextMixin, FilterQuerySetMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from .models import Equipment, Brand, ModelEquipment, Category, StatusEquipment
-from .forms import EquipmentForm, BrandForm, ModelEquipmentForm, CategoryForm, StatusEquipmentForm
+from .forms import EquipmentForm, BrandForm, ModelEquipmentForm, CategoryForm, StatusEquipmentForm, UploadFileForm
+from core.functions import upload_file
 
 
 # Views Equipment
@@ -14,6 +17,19 @@ class CreateEquipmentView(LoginRequiredMixin, PermissionRequiredMixin,  FormVali
     success_url = reverse_lazy('list_equipment')
     permission_required = 'equipment.add_equipment'
     permission_denied_message = 'Você não tem autorização para acessar está página'
+
+
+class UploadFileView(View):
+    def post(self, request, *args, **kwargs):
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            file = request.FILES['file']
+            response = upload_file(file)
+            messages.success(request, response)
+            return redirect('list_equipment')
+        else:
+            messages.error(request, 'form invalido')
+            return redirect('list_equipment')
 
 
 class ListEquipmentView(LoginRequiredMixin, PermissionRequiredMixin, CreateContextMixin, FilterQuerySetMixin, ListView):

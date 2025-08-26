@@ -8,19 +8,24 @@
     <h1 class="text-2xl font-bold mb-6">📋 Lista de {{ title }}</h1>
 
     <div class="flex justify-between mb-3">
-            <div class="grow">
-                {% if add_filter %}
+            {% if add_filter %}
+                <div class="grow">
                     {% include 'components/search.html' %}
-                {% endif %}
-            </div>
+                </div>
+            {% endif %}
     <!-- Botão Criar Novo -->        
-        <div class="">
+        <div class="flex-end">                            
             <a href="{% url 'create_'|add:sufix_url %}"
-                class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+                class="px-5 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
                 ➕ Novo {{ title }}
             </a>
         </div>
     </div>
+     {% if title == 'Equipamento' %}
+    <div class='flex justify-end'>
+        <div>{% include 'components/uploadfile.html' %}</div>
+    </div>
+    {% endif %}
     <div class="overflow-x-auto shadow-md rounded-lg">
         {% if object_list %}
             <table class="min-w-full text-left border-collapse">

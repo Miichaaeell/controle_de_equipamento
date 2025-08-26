@@ -1,8 +1,10 @@
 from django.urls import path
-from .views import CreateEquipmentView, CreateBrandView, CreateModelEquipmentView, CreateCategoryView, CreateStatusEquipmentView, ListEquipmentView, ListBrandView,  ListModelEquipmentView, ListCategoryView, ListStatusEquipmentView, UpdateBrandView, UpdateEquipmentView, UpdateModelEquipmentView, UpdateCategoryView, UpdateStatusEquipmentView
+from .views import CreateEquipmentView, CreateBrandView, CreateModelEquipmentView, CreateCategoryView, CreateStatusEquipmentView, ListEquipmentView, ListBrandView,  ListModelEquipmentView, ListCategoryView, ListStatusEquipmentView, UpdateBrandView, UpdateEquipmentView, UpdateModelEquipmentView, UpdateCategoryView, UpdateStatusEquipmentView, UploadFileView
 
 
 urlpatterns = [
+     # Views upload files
+     path('uploadfile/', UploadFileView.as_view(), name='uploadfile'),
     # Views Equipments
     path('create_equipment/', CreateEquipmentView.as_view(),
          name='create_equipment'),

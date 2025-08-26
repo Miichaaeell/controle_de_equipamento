@@ -43,3 +43,8 @@ def get_metrics(data):
     }
 
     return context
+
+
+def upload_file(file):
+    ...
+    return 'form valid'

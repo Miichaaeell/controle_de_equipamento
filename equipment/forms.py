@@ -80,3 +80,7 @@ class CategoryForm(forms.ModelForm):
                 "class": "mt-1 block w-full bg-gray-800 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
             }),
         }
+
+
+class UploadFileForm(forms.Form):
+    file = forms.FileField()
