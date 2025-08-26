@@ -5,7 +5,7 @@ from django.views.generic import ListView, View, UpdateView, CreateView
 from core.mixins import FormValidMixin, CreateContextMixin, FilterQuerySetMixin
 from .models import ControllerStock, Tracking, Reason
 from .forms import ControllerStockForm, ReasonForm
-from .functions import get_metrics
+from core.functions import get_metrics
 
 
 # View Dashboard

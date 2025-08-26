@@ -1,8 +1,9 @@
+import uuid
 from django.core.management.base import BaseCommand
 from equipment.models import Brand, Category, StatusEquipment, ModelEquipment, Equipment
 from controller_stock.models import ControllerStock, Tracking
 from django.contrib.auth.models import User
-import uuid
+from core.functions import create_controller_stock
 
 
 class Command(BaseCommand):
@@ -18,13 +19,13 @@ class Command(BaseCommand):
         base_list = [
             {'model': 'ec-230', 'brand': 'tp-link', 'category': 'roteador'},
             {'model': 'archer-c6', 'brand': 'tp-link', 'category': 'roteador'},
-            {'model': 'rb4011', 'brand': 'mikrotik', 'category': 'roteador'},
+            {'model': 'ex-511', 'brand': 'tp-link', 'category': 'casa on'},
             {'model': 'ax1800', 'brand': 'xiaomi', 'category': 'roteador'},
             {'model': 'dir-615', 'brand': 'd-link', 'category': 'roteador'},
 
-            {'model': 'hg6145f', 'brand': 'fiberhome', 'category': 'onu integrada'},
-            {'model': 'hg8245h', 'brand': 'huawei', 'category': 'onu integrada'},
-            {'model': 'onu-110', 'brand': 'intelbras', 'category': 'onu integrada'},
+            {'model': 'hg6145f', 'brand': 'fiberhome', 'category': 'integrada'},
+            {'model': 'hg8245h', 'brand': 'huawei', 'category': 'integrada'},
+            {'model': 'onu-110', 'brand': 'intelbras', 'category': 'integrada'},
 
             {'model': 'onu-f601', 'brand': 'fiberhome', 'category': 'onu'},
             {'model': 'hg8010h', 'brand': 'huawei', 'category': 'onu'}
@@ -81,3 +82,7 @@ class Command(BaseCommand):
         Equipment.objects.bulk_create(equipments_to_create)
         print(
             f'✅ database successfully populated with {len(equipments_to_create)} registers')
+        for equipment in equipments_to_create:
+            create_controller_stock(instance=equipment)
+        print(
+            f'✅ controller stock database successfully populated with {len(equipments_to_create)} registers')

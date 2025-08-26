@@ -1,5 +1,17 @@
-def get_metrics(data):
+from controller_stock.models import ControllerStock, Reason, Location
 
+
+def create_controller_stock(instance):
+    ControllerStock.objects.create(
+        equipment=instance,
+        location=Location.objects.get(location__icontains='estoque'),
+        reason=Reason.objects.get(reason__icontains='entrada'),
+        observation='Equipamento adicionado ao estoque',
+        responsible=instance.responsible,
+    )
+
+
+def get_metrics(data):
     inactives = data.filter(
         equipment__status__status__contains='Inativo')
     actives = data.filter(
@@ -7,9 +19,9 @@ def get_metrics(data):
     stock = data.filter(location__location__icontains='estoque')
     clients = data.filter(location__location__icontains='cliente')
     technical = data.filter(location__type__icontains='tecnico')
-    onu_integration = data.filter(
-        equipment__category__category__icontains='ONU Integrada')
-    onu = data.filter(equipment__category__category__contains='ONU')
+    integration = data.filter(
+        equipment__category__category__icontains='integrada')
+    onu = data.filter(equipment__category__category__icontains='onu')
     routers = data.filter(
         equipment__category__category__contains='roteador')
     casa_on = data.filter(
@@ -21,7 +33,7 @@ def get_metrics(data):
             'stock': stock.count() if stock else 0,
             'clients': clients.count() if clients else 0,
             'technical': technical.count() if technical else 0,
-            'onu_integration': onu_integration.count() if onu_integration else 0,
+            'onu_integration': integration.count() if integration else 0,
             'onu': onu.count() if onu else 0,
             'routers': routers.count() if routers else 0,
             'casa_on': casa_on.count() if casa_on else 0,
