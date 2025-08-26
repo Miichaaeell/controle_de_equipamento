@@ -6,11 +6,21 @@
 {% block content %}
 <div class="container mx-auto p-6">
     <h1 class="text-2xl font-bold mb-6">📋 Lista de {{ title }}</h1>
-    
-    {% if add_filter %}
-        {% include 'components/search.html' %}
-    {% endif %}            
 
+    <div class="flex justify-between mb-3">
+            <div class="grow">
+                {% if add_filter %}
+                    {% include 'components/search.html' %}
+                {% endif %}
+            </div>
+    <!-- Botão Criar Novo -->        
+        <div class="">
+            <a href="{% url 'create_'|add:sufix_url %}"
+                class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+                ➕ Novo {{ title }}
+            </a>
+        </div>
+    </div>
     <div class="overflow-x-auto shadow-md rounded-lg">
         {% if object_list %}
             <table class="min-w-full text-left border-collapse">
@@ -43,14 +53,7 @@
         {% else %}
             <p class="text-gray-600">Nenhum {{ title }} encontrado.</p>
         {% endif %}
-
-        <!-- Botão Criar Novo -->
-        <div class="flex justify-end mt-6">
-            <a href="{% url 'create_'|add:sufix_url %}"
-               class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
-                ➕ Novo {{ title }}
-            </a>
-        </div>
     </div>
+    {% include 'components/pagination.html' %}
 </div>
 {% endblock %}

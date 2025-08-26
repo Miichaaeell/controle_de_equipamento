@@ -23,6 +23,7 @@ class ListEquipmentView(LoginRequiredMixin, PermissionRequiredMixin, CreateConte
     permission_required = 'equipment.view_equipment'
     permission_denied_message = 'Você não tem autorização para acessar está página'
     add_filter = True
+    paginate_by = 15
 
 
 class UpdateEquipmentView(LoginRequiredMixin, PermissionRequiredMixin, FormValidMixin, CreateContextMixin, UpdateView):
