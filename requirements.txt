@@ -1,6 +1,16 @@
 asgiref==3.9.1
 Django==5.2.5
 django-jazzmin==3.0.1
+iniconfig==2.1.0
+numpy==2.3.2
+packaging==25.0
+pandas==2.3.2
+pluggy==1.6.0
+Pygments==2.19.2
+pytest==8.4.1
+python-dateutil==2.9.0.post0
 python-decouple==3.8
+pytz==2025.2
+six==1.17.0
 sqlparse==0.5.3
 tzdata==2025.2
