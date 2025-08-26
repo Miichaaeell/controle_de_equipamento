@@ -54,12 +54,12 @@ It also provides a **tracking view**, where you can search by **MAC Address** or
 ---
 ## 📊 Populate Database for Testing
 
-The project includes a custom management command that generates 2000 fake records automatically:<br><br>
+The project includes a custom management command that generates 2000 fake records automatically:<br>
   ```bash
   python manage.py populatedb
   ```
+⚠️ Important: You must already have at least one user created before running this command.
 
-## ⚠️ Important: You must already have at least one user created before running this command.
 ---
 ## 📌 Main Features
 
