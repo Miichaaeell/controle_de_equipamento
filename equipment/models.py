@@ -11,6 +11,11 @@ class Brand(TimeStampModel):
         verbose_name_plural = 'Marcas'
         ordering = ['brand']
 
+    def save(self, *args, **kwargs):
+        if self.brand:
+            self.brand = self.brand.upper()
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.brand
 
@@ -26,6 +31,11 @@ class ModelEquipment(TimeStampModel):
         verbose_name_plural = 'Modelos dos equipamentos'
         ordering = ['model']
 
+    def save(self, *args, **kwargs):
+        if self.model:
+            self.model = self.model.upper()
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return str(f'{self.model}')
 
@@ -39,6 +49,11 @@ class Category(TimeStampModel):
         verbose_name_plural = 'Categorias'
         ordering = ['category']
 
+    def save(self, *args, **kwargs):
+        if self.category:
+            self.category = self.category.upper()
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.category
 
@@ -51,6 +66,11 @@ class StatusEquipment(TimeStampModel):
         verbose_name = 'Status do equipamento'
         verbose_name_plural = 'Status dos equipamentos'
         ordering = ['status']
+
+    def save(self, *args, **kwargs):
+        if self.status:
+            self.status = self.status.upper()
+        super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return self.status
@@ -74,6 +94,12 @@ class Equipment(UserTracking, TimeStampModel):
         verbose_name = 'Equipamento'
         verbose_name_plural = 'Equipamentos'
         ordering = ['model']
+
+    def save(self, *args, **kwargs):
+        if self.mac_address and self.serial_number:
+            self.mac_address = self.mac_address.upper()
+            self.serial_number = self.serial_number.upper()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.model}'

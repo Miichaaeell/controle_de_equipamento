@@ -1,18 +1,34 @@
 from equipment.models import Brand, Category, ModelEquipment, Equipment, StatusEquipment
 from controller_stock.models import ControllerStock, Reason, Location
 import pandas as pd
+from collections.abc import Iterable
+from threading import Thread
+
+
+def normalize(text: str) -> str:
+    return text.strip().upper()
 
 
 def create_controller_stock(instance):
     location, _ = Location.objects.get_or_create(location='ESTOQUE')
     reason, _ = Reason.objects.get_or_create(reason='ENTRADA')
-    ControllerStock.objects.create(
-        equipment=instance,
-        location=location,
-        reason=reason,
-        observation='Equipamento adicionado ao estoque',
-        responsible=instance.responsible,
-    )
+    if isinstance(instance, Iterable) and not isinstance(instance, (str, bytes)):
+        for obj in instance:
+            ControllerStock.objects.create(
+                equipment=obj,
+                location=location,
+                reason=reason,
+                observation='Equipamento adicionado ao estoque',
+                responsible=obj.responsible,
+            )
+    else:
+        ControllerStock.objects.create(
+            equipment=instance,
+            location=location,
+            reason=reason,
+            observation='Equipamento adicionado ao estoque',
+            responsible=instance.responsible,
+        )
 
 
 def get_metrics(data):
@@ -27,9 +43,9 @@ def get_metrics(data):
         equipment__category__category__icontains='integrada')
     onu = data.filter(equipment__category__category__icontains='onu')
     routers = data.filter(
-        equipment__category__category__contains='roteador')
+        equipment__category__category__icontains='roteador')
     casa_on = data.filter(
-        equipment__category__category__contains='casa on')
+        equipment__category__category__icontains='casa on')
     context = {
         'metrics': {
             'inactives': inactives.count() if inactives else 0,
@@ -45,10 +61,6 @@ def get_metrics(data):
     }
 
     return context
-
-
-def normalize(text: str) -> str:
-    return text.strip().upper()
 
 
 def upload_file(file, responsible):
@@ -107,7 +119,7 @@ def upload_file(file, responsible):
         )for row in df.itertuples(index=False)
     ]
     Equipment.objects.bulk_create(create_to_equipment)
-    for equipment in create_to_equipment:
-        create_controller_stock(equipment)
+    Thread(target=create_controller_stock, args=(create_to_equipment,),
+           name='ControllerStockImportThread').start()
     print(f'Realizado {len(create_to_equipment)} novos cadastros')
     return ('success', f'Realizado {len(create_to_equipment)} novos cadastros')

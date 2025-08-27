@@ -4,6 +4,7 @@ from equipment.models import Brand, Category, StatusEquipment, ModelEquipment, E
 from controller_stock.models import ControllerStock, Tracking
 from django.contrib.auth.models import User
 from core.functions import create_controller_stock
+from threading import Thread
 
 
 class Command(BaseCommand):
@@ -84,9 +85,8 @@ class Command(BaseCommand):
             Equipment.objects.bulk_create(equipments_to_create)
             print(
                 f'✅ database successfully populated with {len(equipments_to_create)} registers')
-            for equipment in equipments_to_create:
-                create_controller_stock(instance=equipment)
-            print(
-                f'✅ controller stock database successfully populated with {len(equipments_to_create)} registers')
+            Thread(target=create_controller_stock, args=(equipments_to_create,), name='ControllerStockImportThread').start()                
+            return print(
+                f'✅ stock controller being populated in the background')
         else:
             print(f'Nenhum usuário cadastrado, para prosseguir, cadastre um usuário')
