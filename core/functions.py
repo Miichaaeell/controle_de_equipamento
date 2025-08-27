@@ -73,6 +73,7 @@ def upload_file(file, responsible):
             df = pd.read_excel(file)
         case 'csv':
             df = pd.read_csv(file)
+    df.columns = df.columns.str.strip().str.lower()
     columns_required = {'brand', 'model', 'category',
                         'mac_address', 'serial_number'}
     if not columns_required.issubset(df.columns):
