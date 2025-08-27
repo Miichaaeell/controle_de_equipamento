@@ -25,7 +25,10 @@ class UploadFileView(View):
         if form.is_valid():
             file = request.FILES['file']
             response = upload_file(file)
-            messages.success(request, response)
+            if response[0] != 'success':
+                messages.error(request, response[1])
+            else:
+                messages.success(request, response)
             return redirect('list_equipment')
         else:
             messages.error(request, 'form invalido')

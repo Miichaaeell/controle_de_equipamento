@@ -1,4 +1,5 @@
 from controller_stock.models import ControllerStock, Reason, Location
+import pandas as pd
 
 
 def create_controller_stock(instance):
@@ -46,5 +47,29 @@ def get_metrics(data):
 
 
 def upload_file(file):
-    ...
-    return 'form valid'
+    # 1. verificar extensão
+    ext = file.name.split('.')[-1].lower()
+    if ext not in ['xlsx', 'csv']:
+        return ('erro', 'Formato de arquivo inválido')
+    match ext:
+        case 'xlsx':
+            df = pd.read_excel(file)
+        case 'csv':
+            df = pd.read_csv(file)
+    columns_required = {'brand', 'model', 'category',
+                        'mac_address', 'serial_number'}
+    if not columns_required.issubset(df.columns):
+        return ('erro', 'Estrutura do arquivo incompátivel')
+    brands_cache, category_cache, models_cache = {}, {}, {}
+    
+    for col_name, cache in [('brand', brands_cache), 
+                        ('category', category_cache), 
+                        ('model', models_cache)]:
+        for value in df[col_name].unique():
+            if value not in cache:
+            # cria entidade no banco
+                cache[value] = value
+
+
+    print(brands_cache, models_cache, category_cache)
+    return ('success', 'form valid')

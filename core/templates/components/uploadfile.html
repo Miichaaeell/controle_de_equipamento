@@ -1,9 +1,8 @@
- <form action="{% url 'uploadfile' %}" method="post" enctype="multipart/form-data" class="mb-6 w-full flex sm:flex-row gap-4 ">
+{% for message in messages %}
+  <p>{{ message }}</p>
+{% endfor %}
+<form action="{% url 'uploadfile' %}" method="post" enctype="multipart/form-data" class="mb-6 w-full flex sm:flex-row gap-4 ">
     {% csrf_token %}
     <input type="file" name="file" id="file" required>
     <button type="submit" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">Importar arquivo</button>
 </form>
-
-{% for message in messages %}
-  <p>{{ message }}</p>
-{% endfor %}
