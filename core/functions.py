@@ -1,3 +1,4 @@
+from equipment.models import Brand, Category, ModelEquipment, Equipment, StatusEquipment
 from controller_stock.models import ControllerStock, Reason, Location
 import pandas as pd
 
@@ -46,7 +47,11 @@ def get_metrics(data):
     return context
 
 
-def upload_file(file):
+def normalize(text: str) -> str:
+    return text.strip().upper()
+
+
+def upload_file(file, responsible):
     # 1. verificar extensão
     ext = file.name.split('.')[-1].lower()
     if ext not in ['xlsx', 'csv']:
@@ -61,15 +66,48 @@ def upload_file(file):
     if not columns_required.issubset(df.columns):
         return ('erro', 'Estrutura do arquivo incompátivel')
     brands_cache, category_cache, models_cache = {}, {}, {}
-    
-    for col_name, cache in [('brand', brands_cache), 
-                        ('category', category_cache), 
-                        ('model', models_cache)]:
-        for value in df[col_name].unique():
-            if value not in cache:
-            # cria entidade no banco
-                cache[value] = value
 
-
-    print(brands_cache, models_cache, category_cache)
-    return ('success', 'form valid')
+    for col_name, cache in [('brand', brands_cache),
+                            ('category', category_cache),
+                            ]:
+        for value in df[col_name].dropna().unique():
+            key = normalize(value)
+            if key not in cache:
+                match col_name:
+                    case 'brand':
+                        obj, _ = Brand.objects.get_or_create(brand=key)
+                    case 'category':
+                        obj, _ = Category.objects.get_or_create(category=key)
+            cache[key] = obj
+    # Cria models
+    for row in df[['brand', 'model']].dropna().drop_duplicates().itertuples(index=False):
+        model = normalize(row.model)
+        brand = normalize(row.brand)
+        if model not in models_cache:
+            obj, _ = ModelEquipment.objects.get_or_create(
+                model=model,
+                brand=brands_cache.get(brand)
+            )
+            models_cache[model] = obj
+    # recupera status ativo
+    status_active = StatusEquipment.objects.filter(
+        status__iexact='ativo').first()
+    if not status_active:
+        status_active = StatusEquipment.objects.create(status='ATIVO')
+    # Cria lista a ser criada com bulk
+    create_to_equipment = [
+        Equipment(
+            brand=brands_cache[normalize(row.brand)],
+            model=models_cache[normalize(row.model)],
+            category=category_cache[normalize(row.category)],
+            mac_address=normalize(row.mac_address),
+            serial_number=normalize(row.serial_number),
+            status=status_active,
+            responsible=responsible,
+        )for row in df.itertuples(index=False)
+    ]
+    Equipment.objects.bulk_create(create_to_equipment)
+    for equipment in create_to_equipment:
+        create_controller_stock(equipment)
+    print(f'Realizado {len(create_to_equipment)} novos cadastros')
+    return ('success', f'Realizado {len(create_to_equipment)} novos cadastros')
