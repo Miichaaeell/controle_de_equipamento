@@ -7,7 +7,7 @@ from datetime import datetime
 
 class LoginView(View):
     hour = datetime.now().time().hour
-    if hour > 0 and hour < 12:
+    if hour >= 0 and hour < 12:
         saudacao = 'Bom dia'
     elif hour >= 12 and hour < 18:
         saudacao = 'Boa Tarde'
