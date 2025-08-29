@@ -77,9 +77,11 @@ def upload_file(file, responsible):
     columns_required = {'brand', 'model', 'category',
                         'mac_address', 'serial_number'}
     if not columns_required.issubset(df.columns):
-        return ('erro', 'Estrutura do arquivo incompátivel')
-    brands_cache, category_cache, models_cache = {}, {}, {}
+        missing = columns_required.difference(df.columns)
+        return ('erro', f'Colunas obrigatórias faltantes: {(', '.join(missing))}')
 
+    brands_cache, brands_duplicate, category_cache, category_duplicate, models_cache, models_duplicate = {}, [], {}, [], {}, []
+    brands_name = {normalize(brand) for brand in df['brand'].dropna().drop_duplicates().index(False)}
     for col_name, cache in [('brand', brands_cache),
                             ('category', category_cache),
                             ]:
@@ -91,7 +93,7 @@ def upload_file(file, responsible):
                         obj, _ = Brand.objects.get_or_create(brand=key)
                     case 'category':
                         obj, _ = Category.objects.get_or_create(category=key)
-            cache[key] = obj
+                cache[key] = obj
     # Cria models
     for row in df[['brand', 'model']].dropna().drop_duplicates().itertuples(index=False):
         model = normalize(row.model)
@@ -102,11 +104,13 @@ def upload_file(file, responsible):
                 brand=brands_cache.get(brand)
             )
             models_cache[model] = obj
+
     # recupera status ativo
     status_active = StatusEquipment.objects.filter(
         status__iexact='ativo').first()
     if not status_active:
         status_active = StatusEquipment.objects.create(status='ATIVO')
+
     # Cria lista a ser criada com bulk
     create_to_equipment = [
         Equipment(
@@ -120,7 +124,9 @@ def upload_file(file, responsible):
         )for row in df.itertuples(index=False)
     ]
     Equipment.objects.bulk_create(create_to_equipment)
+    print(
+        f'Realizado {len(create_to_equipment)} novos cadastros iniciando registro em controle...')
     Thread(target=create_controller_stock, args=(create_to_equipment,),
            name='ControllerStockImportThread').start()
-    print(f'Realizado {len(create_to_equipment)} novos cadastros')
+    print('Registro em controle sendo processado em segundo plano')
     return ('success', f'Realizado {len(create_to_equipment)} novos cadastros')
