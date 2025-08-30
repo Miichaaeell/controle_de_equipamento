@@ -22,7 +22,7 @@ class Brand(TimeStampModel):
 
 class ModelEquipment(TimeStampModel):
     model = models.CharField(
-        max_length=124, unique=True, verbose_name='Modelo')
+        max_length=124, verbose_name='Modelo')
     brand = models.ForeignKey(
         Brand, on_delete=models.PROTECT, verbose_name='Marca', related_name='models')
 
@@ -30,6 +30,7 @@ class ModelEquipment(TimeStampModel):
         verbose_name = 'Modelo do equipamento'
         verbose_name_plural = 'Modelos dos equipamentos'
         ordering = ['model']
+        unique_together = ['model', 'brand']
 
     def save(self, *args, **kwargs):
         if self.model:

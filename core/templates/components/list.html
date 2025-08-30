@@ -33,7 +33,14 @@
                     <tr> 
                         <th class="px-4 py-2 text-left text-sm font-semibold">
                             {{ title }}
-                        </th>                      
+                        </th>
+                        
+                        {% if title == 'Modelo do equipamento' %}
+                            <th class="px-4 py-2 text-left text-sm font-semibold">
+                                Marca do Equipamento
+                            </th>
+                        {% endif %}
+                                                 
                         <th class="px-4 py-2 text-right text-sm font-semibold">Ações</th>
                     </tr>
                 </thead>
@@ -42,11 +49,18 @@
                         <tr class="hover:bg-gray-800">
                             
                             <td class="px-4 py-2 text-sm flex justify-between">
-                                <span>{{ obj|upper }} </span>                                                          
+                                <span>{{ obj|upper }} </span>                                            
                              {% if obj.mac_address %}
                                 <span class="text-right">Mac Address - {{ obj.mac_address}}</span>
                             {% endif %}
                             </td>
+                            
+                            {% if title == 'Modelo do equipamento' %}
+                                <td class="px-4 py-2 text-sm">
+                                    <span>{{ obj.brand|upper }} </span>
+                                </td>
+                            {% endif %}
+                                
                             <td class="px-4 py-2 text-right space-x-2">
                                 <a href="{% url 'update_'|add:sufix_url obj.id %}" 
                                    class="px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">Editar</a>
