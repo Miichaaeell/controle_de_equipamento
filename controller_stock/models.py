@@ -38,7 +38,7 @@ class Reason(TimeStampModel):
 
 class ControllerStock(UserTracking, TimeStampModel):
     equipment = models.ForeignKey(
-        Equipment, on_delete=models.PROTECT, verbose_name='Equipamento', related_name='stocks')
+        Equipment, on_delete=models.PROTECT, verbose_name='Equipamento', related_name='stocks', unique=True)
     location = models.ForeignKey(
         Location, on_delete=models.PROTECT, verbose_name='Local', related_name='stocks')
     reason = models.ForeignKey(

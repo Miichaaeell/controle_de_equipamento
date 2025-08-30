@@ -83,10 +83,8 @@ class Command(BaseCommand):
                     except Exception as e:
                         print(e)
             Equipment.objects.bulk_create(equipments_to_create)
-            print(
-                f'✅ database successfully populated with {len(equipments_to_create)} registers')
-            Thread(target=create_controller_stock, args=(equipments_to_create,), name='ControllerStockImportThread').start()                
+            create_controller_stock(equipments_to_create)
             return print(
-                f'✅ stock controller being populated in the background')
+                f'✅ database successfully populated with {len(equipments_to_create)} registers')
         else:
             print(f'Nenhum usuário cadastrado, para prosseguir, cadastre um usuário')
