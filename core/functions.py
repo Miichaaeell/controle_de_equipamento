@@ -5,10 +5,6 @@ from collections.abc import Iterable
 from threading import Thread
 
 
-def normalize(text: str) -> str:
-    return text.strip().upper()
-
-
 def create_controller_stock(instance):
     location, _ = Location.objects.get_or_create(location='ESTOQUE')
     reason, _ = Reason.objects.get_or_create(reason='ENTRADA')
@@ -73,11 +69,15 @@ def upload_file(file, responsible):
     ext = file.name.split('.')[-1].lower()
     if ext not in ['xlsx', 'csv']:
         return ('erro', 'Formato de arquivo inválido')
-    match ext:
-        case 'xlsx':
-            df = pd.read_excel(file)
-        case 'csv':
-            df = pd.read_csv(file)
+    try:
+        match ext:
+            case 'xlsx':
+                df = pd.read_excel(file)
+            case 'csv':
+                df = pd.read_csv(file)
+    except Exception as e:
+        return ('erro', f'Erro ao ler o arquivo: {str(e)}')
+
     df.columns = df.columns.str.strip().str.lower()
     columns_required = {'brand', 'model', 'category',
                         'mac_address', 'serial_number'}
@@ -85,27 +85,27 @@ def upload_file(file, responsible):
         missing = columns_required.difference(df.columns)
         return ('erro', f'Colunas obrigatórias faltantes: {', '.join(missing)}')
 
-    # Caches
-    brands_models_category = {(normalize(row.brand), normalize(row.model), normalize(row.category)) for row in df[['brand', 'model', 'category']].dropna(
-    ).drop_duplicates().itertuples(index=False)}
+    # Padronizando textos para maiusculo
+    df = df.apply(lambda x: x.str.upper())
 
     # Tratando brands existentes e faltantes
+    unique_brands = set(df['brand'].dropna().unique())
     brands_existing = {obj.brand: obj for obj in Brand.objects.filter(
-        brand__in=[normalize(b) for b, _, _ in brands_models_category]
+        brand__in=[brand for brand in unique_brands]
     )}
-    missing_brands = {brand for brand, _, _,
-                      in brands_models_category if brand not in brands_existing}
+
+    missing_brands = unique_brands.difference(brands_existing.keys())
     if missing_brands:
         create_brand = [Brand(brand=brand) for brand in missing_brands]
         Brand.objects.bulk_create(create_brand)
         brands_existing.update({obj.brand: obj for obj in create_brand})
 
     # Tratando categories existentes e faltantes
+    unique_categorys = set(df['category'].dropna().unique())
     category_existing = {obj.category: obj for obj in Category.objects.filter(
-        category__in=[normalize(c) for _, _, c in brands_models_category]
+        category__in=[category for category in unique_categorys]
     )}
-    category_missing = {category for _, _, category,
-                        in brands_models_category if category not in category_existing}
+    category_missing = unique_categorys.difference(category_existing.keys())
     if category_missing:
         create_category = [Category(category=category)
                            for category in category_missing]
@@ -113,45 +113,50 @@ def upload_file(file, responsible):
         category_existing.update(
             {obj.category: obj for obj in create_category})
 
-    #   Tratando models existentes e faltantes
-    models_existing = {obj.model: obj for obj in ModelEquipment.objects.filter(
-        model__in=[normalize(m) for _, m, _ in brands_models_category],
-        brand__brand__in=[normalize(b) for b, _, _, in brands_models_category],
-    )}
-    print(models_existing)
-    models_missing = {(brand, model) for brand, model,
-                      _ in brands_models_category if model and brand not in models_existing}
-    print(f'faltantes {models_missing}')
-    if models_missing:
-        create_model = [ModelEquipment(
+    # Tratando models existentes e faltantes
+    models_existing = dict()
+    models_missing = []
+    brands_models = df[['brand', 'model']].dropna().drop_duplicates().itertuples(
+        index=False)
+    brand_models_in_db = ModelEquipment.objects.all(
+    ).select_related('brand')  # QuerySet unica ao banco
+    for brand, model in brands_models:
+        obj = brand_models_in_db.filter(
             model=model,
-            brand=brands_existing.get(brand)
-        ) for brand, model in models_missing]
-        ModelEquipment.objects.bulk_create(
-            create_model,
-            update_conflicts=True,
-            update_fields=['brand'],
-            unique_fields=['model', 'brand']
-        )
-        models_existing.update({obj.model: obj for obj in create_model})
+            brand__brand=brand
+        ).first()
+        if obj:
+            models_existing[model] = obj
+        else:
+            models_missing.append((brand, model))
+
+    create_models = [ModelEquipment(
+        model=model,
+        brand=brands_existing.get(brand),
+    ) for brand, model in models_missing]
+    ModelEquipment.objects.bulk_create(create_models)
+    models_existing.update({obj.model: obj for obj in create_models})
+
     # recupera status ativo
     status_active = StatusEquipment.objects.filter(
         status__iexact='ativo').first()
     if not status_active:
         status_active = StatusEquipment.objects.create(status='ATIVO')
-
+    equipemnts_existing = list(Equipment.objects.filter(
+        mac_address__in=df['mac_address'].dropna().unique()))
+    # Criando equipamentos
     equipment_to_create = [
         Equipment(
-            brand=brands_existing.get(normalize(row.brand)),
-            model=models_existing.get(normalize(row.model)),
-            category=category_existing.get(normalize(row.category)),
-            mac_address=normalize(row.mac_address),
-            serial_number=normalize(row.serial_number),
+            brand=brands_existing.get(row.brand),
+            model=models_existing.get(row.model),
+            category=category_existing.get(row.category),
+            mac_address=row.mac_address,
+            serial_number=row.serial_number,
             status=status_active,
             responsible=responsible,
-        ) for row in df.dropna().itertuples(index=False)
+        ) for row in df.dropna().itertuples(index=False) if row.mac_address not in {eq.mac_address for eq in equipemnts_existing}
     ]
-    print(equipment_to_create)
+    print(f'Equipamentos a criar: {len(equipment_to_create)}')
     Equipment.objects.bulk_create(
         equipment_to_create,
         update_conflicts=True,
@@ -159,4 +164,17 @@ def upload_file(file, responsible):
         unique_fields=['mac_address']
     )
     create_controller_stock(equipment_to_create)
-    return ('success', f'{file.name} carregado com sucesso')
+    total_created = len(missing_brands) + \
+        len(category_missing) + len(models_missing) + len(equipment_to_create)
+    total_existing = len(df) - len(equipment_to_create)
+    return ('success', f'''{file.name} carregado com sucesso,\n
+            {len(missing_brands)} marcas criadas,\n
+            {len(brands_existing) - len(missing_brands)} marcas já existentes no sistema,\n
+            {len(category_missing)} categorias criadas,\n
+            {len(category_existing) - len(category_missing)} categorias já existentes no sistema,\n
+            {len(models_missing)} modelos criados,\n
+            {len(models_existing) - len(models_missing)} modelos já existentes no sistema,\n
+            {len(equipment_to_create)} equipamentos criados,\n
+            {total_existing} equipamentos já existentes no sistema.\n
+            {total_created} registros criados no total.
+            ''')
