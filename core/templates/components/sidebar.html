@@ -9,7 +9,7 @@
         <button 
             @click="open = !open"
             class="p-2 rounded hover:bg-gray-700 items-center gap-3 px-3 py-2"
-        >
+         title="Menu">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
             </svg>
@@ -19,74 +19,74 @@
     <!-- Navegação -->
     <nav class="flex-1 p-4 space-y-2">
         
-        {% if perms.controller_stock.view_controllerstock and not thecnical %}
-            <a href="{% url 'dashboard' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
-            📊 <span x-show="open">Dashboards</span>
-        </a>
-        {% endif %}
-            
+        {% if perms.controller_stock.view_controllerstock and not thecnical %}    
+            <a href="{% url 'dashboard' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition" title="Dashboards">
+                📊 <span x-show="open">Dashboards</span>
+            </a>
+        
+        {% endif %}            
         
         {% if perms.controller_stock.view_controllerstock %}
-            <a href="{% url 'stock' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
-            📋 <span x-show="open">Controle de equipamento</span>
+            <a href="{% url 'stock' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition" title="Controle de equipamento">
+            📦 <span x-show="open">Controle de equipamento</span>
         </a>
-        {% endif %}
-            
+        {% endif %}            
         
         {% if perms.controller_stock.view_tracking %}
-            <a href="{% url 'tracking' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
-            📈 <span x-show="open">Rastreamento</span>
+            <a href="{% url 'tracking' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition" title="Rastreamento">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none"><path fill="url(#SVGTW2naeNJ)" d="M21 19c0 2.5-4.03 4-9 4s-9-1.5-9-4c0-2.406 4.03-4 9-4s9 1.5 9 4"/><path fill="url(#SVGcfH1icHa)" d="M12 2a7.5 7.5 0 0 0-7.5 7.5c0 1.932 1.064 3.8 2.268 5.316c1.22 1.537 2.678 2.829 3.655 3.622c.926.75 2.228.75 3.154 0c.977-.793 2.435-2.085 3.655-3.622C18.436 13.301 19.5 11.432 19.5 9.5A7.5 7.5 0 0 0 12 2"/><path fill="url(#SVG1e3cqb0x)" d="M14.5 9.5a2.5 2.5 0 1 1-5 0a2.5 2.5 0 0 1 5 0"/><defs><linearGradient id="SVGcfH1icHa" x1="1.219" x2="13.202" y1="-2.857" y2="16.549" gradientUnits="userSpaceOnUse"><stop stop-color="#f97dbd"/><stop offset="1" stop-color="#d7257d"/></linearGradient><linearGradient id="SVG1e3cqb0x" x1="9.79" x2="12.394" y1="9.721" y2="12.428" gradientUnits="userSpaceOnUse"><stop stop-color="#fdfdfd"/><stop offset="1" stop-color="#fecbe6"/></linearGradient><radialGradient id="SVGTW2naeNJ" cx="0" cy="0" r="1" gradientTransform="rotate(-10.678 100.2 -51.93)scale(14.3921 6.38107)" gradientUnits="userSpaceOnUse"><stop stop-color="#7b7bff"/><stop offset=".502" stop-color="#a3a3ff"/><stop offset="1" stop-color="#ceb0ff"/></radialGradient></defs></g></svg>
+ <span x-show="open">Rastreamento</span>
             </a>
         {% endif %}
             
         
         {% if perms.equipment.view_equipment %}
-            <a href="{% url 'list_equipment' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
-            🧰 <span x-show="open"> Equipamento</span>
+            <a href="{% url 'list_equipment' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition" title="Equipamento">
+            💻 <span x-show="open"> Equipamento</span>
         </a>
         {% endif %}
             
         
         {% if perms.controller_stock.view_reason %}
-            <a href="{% url 'list_reason' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
+            <a href="{% url 'list_reason' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition" title="Motivos">
             📝 <span x-show="open">Motivos</span>
         </a>
         {% endif %}
             
         
         {% if perms.equipment.view_category %}
-            <a href="{% url 'list_category' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
-            ⚖️ <span x-show="open">Categorias de equipamento</span>
+            <a href="{% url 'list_category' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition" title="Categorias de equipamento">
+            🗂️ <span x-show="open">Categorias de equipamento</span>
         </a>
         {% endif %}
             
         
         {% if perms.equipment.view_brand %}
-            <a href=" {% url 'list_brand' %} " class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
+            <a href=" {% url 'list_brand' %} " class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition" title="Marcas de Equipamento">
             🏷️ <span x-show="open">Marcas de Equipamento</span>
         </a>
         {% endif %}
             
         
         {% if perms.equipment.view_modelequipment %}
-            <a href="{% url 'list_modelequipment' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
-            ⚙️ <span x-show="open">Modelos de Equipamento</span>
+            <a href="{% url 'list_modelequipment' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition" title="Modelos de Equipamento">
+            🔲 <span x-show="open">Modelos de Equipamento</span>
         </a>
         {% endif %}
             
         
         {% if perms.equipment.view_statusequipment %}
-            <a href="{% url 'list_statusequipment' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
+            <a href="{% url 'list_statusequipment' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition" title="Status de Equipamento">
             ✅ <span x-show="open">Status de Equipamento</span>
         </a>
         {% endif %}            
         
-            <a href="{% url 'detail_account' user.id %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
+            <a href="{% url 'detail_account' user.id %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition" title="Meu Perfil">
             👤 <span x-show="open">Meu Perfil</span>
         </a>
             
-            <a href="{% url 'logout' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition">
-            🔚<span x-show="open">Sair</span>
+            <a href="{% url 'logout' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition" title="Sair">
+            🚪<span x-show="open">Sair</span>
         </a>
 
             
