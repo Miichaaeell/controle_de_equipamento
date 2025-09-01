@@ -34,37 +34,36 @@ def create_controller_stock(instance):
 def get_metrics():
     metrics = ControllerStock.objects.aggregate(
         total_register=Count("id"),
-        actives_count=Count("id", filter=Q(
+        actives=Count("id", filter=Q(
             equipment__status__status__iexact="ATIVO")),
-        inactives_count=Count("id", filter=Q(
+        inactives=Count("id", filter=Q(
             equipment__status__status__iexact="INATIVO")),
-        stock_count=Count("id", filter=Q(
+        stock=Count("id", filter=Q(
             location__location__iexact="ESTOQUE")),
-        clients_count=Count("id", filter=Q(
+        clients=Count("id", filter=Q(
             location__location__iexact="CLIENTE")),
-        technical_count=Count("id", filter=Q(
+        technical=Count("id", filter=Q(
             location__type__icontains="TECNICO")),
     )
 
     # Contagem por categoria (para gráfico de barras)
     category_counts = (
         ControllerStock.objects
-        .filter(location__location__iexact="ESTOQUE")
         .values(category_name=F("equipment__category__category"))
         .annotate(total=Count("id"))
         .order_by("category_name")
     )
 
-    labels = [c["category_name"] for c in category_counts]
-    values = [c["total"] for c in category_counts]
+    labels = [category["category_name"] for category in category_counts]
+    values = [total["total"] for total in category_counts]
 
     context = {
         "metrics": {
-            "inactives": metrics['inactives_count'],
-            "actives": metrics['actives_count'],
-            "stock": metrics['stock_count'],
-            "clients": metrics['clients_count'],
-            "technical": metrics['technical_count'],
+            "inactives": metrics['inactives'],
+            "actives": metrics['actives'],
+            "stock": metrics['stock'],
+            "clients": metrics['clients'],
+            "technical": metrics['technical'],
             "labels": labels,
             "values": values,  # conta de cada categoria
         }
