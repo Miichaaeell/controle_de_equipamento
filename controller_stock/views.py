@@ -16,8 +16,7 @@ class DashboardView(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_denied_message = 'Você não tem autorização para acessar está página'
 
     def get(self, request, *args, **kwargs):
-        data = ControllerStock.objects.all()
-        context = get_metrics(data)
+        context = get_metrics()
         return render(request, 'dashboard.html', context)
 
 

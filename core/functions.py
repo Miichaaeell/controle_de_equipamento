@@ -2,7 +2,7 @@ from equipment.models import Brand, Category, ModelEquipment, Equipment, StatusE
 from controller_stock.models import ControllerStock, Reason, Location
 import pandas as pd
 from collections.abc import Iterable
-from threading import Thread
+from django.db.models import Q, Count, F
 
 
 def create_controller_stock(instance):
@@ -31,32 +31,42 @@ def create_controller_stock(instance):
         )
 
 
-def get_metrics(data):
-    inactives = data.filter(
-        equipment__status__status__iexact='inativo')
-    actives = data.filter(
-        equipment__status__status__iexact='ativo')
-    stock = data.filter(location__location__icontains='estoque')
-    clients = data.filter(location__location__icontains='cliente')
-    technical = data.filter(location__type__icontains='tecnico')
-    integration = data.filter(
-        equipment__category__category__icontains='integrada')
-    onu = data.filter(equipment__category__category__icontains='onu')
-    routers = data.filter(
-        equipment__category__category__icontains='roteador')
-    casa_on = data.filter(
-        equipment__category__category__icontains='casa on')
+def get_metrics():
+    metrics = ControllerStock.objects.aggregate(
+        total_register=Count("id"),
+        actives_count=Count("id", filter=Q(
+            equipment__status__status__iexact="ATIVO")),
+        inactives_count=Count("id", filter=Q(
+            equipment__status__status__iexact="INATIVO")),
+        stock_count=Count("id", filter=Q(
+            location__location__iexact="ESTOQUE")),
+        clients_count=Count("id", filter=Q(
+            location__location__iexact="CLIENTE")),
+        technical_count=Count("id", filter=Q(
+            location__type__icontains="TECNICO")),
+    )
+
+    # Contagem por categoria (para gráfico de barras)
+    category_counts = (
+        ControllerStock.objects
+        .filter(location__location__iexact="ESTOQUE")
+        .values(category_name=F("equipment__category__category"))
+        .annotate(total=Count("id"))
+        .order_by("category_name")
+    )
+
+    labels = [c["category_name"] for c in category_counts]
+    values = [c["total"] for c in category_counts]
+
     context = {
-        'metrics': {
-            'inactives': inactives.count() if inactives else 0,
-            'actives': actives.count() if actives else 0,
-            'stock': stock.count() if stock else 0,
-            'clients': clients.count() if clients else 0,
-            'technical': technical.count() if technical else 0,
-            'onu_integration': integration.count() if integration else 0,
-            'onu': onu.count() if onu else 0,
-            'routers': routers.count() if routers else 0,
-            'casa_on': casa_on.count() if casa_on else 0,
+        "metrics": {
+            "inactives": metrics['inactives_count'],
+            "actives": metrics['actives_count'],
+            "stock": metrics['stock_count'],
+            "clients": metrics['clients_count'],
+            "technical": metrics['technical_count'],
+            "labels": labels,
+            "values": values,  # conta de cada categoria
         }
     }
 
@@ -91,7 +101,7 @@ def upload_file(file, responsible):
     # Tratando brands existentes e faltantes
     unique_brands = set(df['brand'].dropna().unique())
     brands_existing = {obj.brand: obj for obj in Brand.objects.filter(
-        brand__in=[brand for brand in unique_brands]
+        brand__in=unique_brands
     )}
 
     missing_brands = unique_brands.difference(brands_existing.keys())
@@ -103,7 +113,7 @@ def upload_file(file, responsible):
     # Tratando categories existentes e faltantes
     unique_categorys = set(df['category'].dropna().unique())
     category_existing = {obj.category: obj for obj in Category.objects.filter(
-        category__in=[category for category in unique_categorys]
+        category__in=unique_categorys
     )}
     category_missing = unique_categorys.difference(category_existing.keys())
     if category_missing:
@@ -115,54 +125,42 @@ def upload_file(file, responsible):
 
     # Tratando models existentes e faltantes
     models_existing = dict()
-    models_missing = []
-    brands_models = df[['brand', 'model']].dropna().drop_duplicates().itertuples(
-        index=False)
-    brand_models_in_db = ModelEquipment.objects.all(
-    ).select_related('brand')  # QuerySet unica ao banco
-    for brand, model in brands_models:
-        obj = brand_models_in_db.filter(
+    brands_models = set([tuple(row) for row in df[['brand', 'model']].dropna(
+    ).drop_duplicates().itertuples(index=False)])
+    brand_models_in_db = list(ModelEquipment.objects.select_related('brand').all(
+    ))  # QuerySet unica ao banco
+    for obj in brand_models_in_db:
+        models_existing[(obj.brand.brand, obj.model)] = obj
+    models_missing = brands_models.difference(models_existing.keys())
+    if models_missing:
+        create_models = [ModelEquipment(
             model=model,
-            brand__brand=brand
-        ).first()
-        if obj:
-            models_existing[model] = obj
-        else:
-            models_missing.append((brand, model))
-
-    create_models = [ModelEquipment(
-        model=model,
-        brand=brands_existing.get(brand),
-    ) for brand, model in models_missing]
-    ModelEquipment.objects.bulk_create(create_models)
-    models_existing.update({obj.model: obj for obj in create_models})
+            brand=brands_existing.get(brand),
+        ) for brand, model in models_missing]
+        ModelEquipment.objects.bulk_create(create_models)
+        models_existing.update(
+            {(obj.brand.brand, obj.model): obj for obj in create_models})
 
     # recupera status ativo
     status_active = StatusEquipment.objects.filter(
         status__iexact='ativo').first()
     if not status_active:
         status_active = StatusEquipment.objects.create(status='ATIVO')
-    equipemnts_existing = list(Equipment.objects.filter(
-        mac_address__in=df['mac_address'].dropna().unique()))
+    equipemnts_existing = set(Equipment.objects.filter(
+        mac_address__in=df['mac_address'].dropna().unique()).values_list('mac_address', flat=True))
     # Criando equipamentos
     equipment_to_create = [
         Equipment(
             brand=brands_existing.get(row.brand),
-            model=models_existing.get(row.model),
+            model=models_existing.get((row.brand, row.model)),
             category=category_existing.get(row.category),
             mac_address=row.mac_address,
             serial_number=row.serial_number,
             status=status_active,
             responsible=responsible,
-        ) for row in df.dropna().itertuples(index=False) if row.mac_address not in {eq.mac_address for eq in equipemnts_existing}
+        ) for row in df.dropna().itertuples(index=False) if row.mac_address not in equipemnts_existing
     ]
-    print(f'Equipamentos a criar: {len(equipment_to_create)}')
-    Equipment.objects.bulk_create(
-        equipment_to_create,
-        update_conflicts=True,
-        update_fields=['brand', 'model', 'category', 'status', 'responsible'],
-        unique_fields=['mac_address']
-    )
+    Equipment.objects.bulk_create(equipment_to_create)
     create_controller_stock(equipment_to_create)
     total_created = len(missing_brands) + \
         len(category_missing) + len(models_missing) + len(equipment_to_create)
