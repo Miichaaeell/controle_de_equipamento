@@ -24,7 +24,7 @@ class DashboardView(LoginRequiredMixin, PermissionRequiredMixin, View):
 class ControllerStockView(LoginRequiredMixin, PermissionRequiredMixin, FilterQuerySetMixin, CreateContextMixin, ListView):
     model = ControllerStock
     template_name = 'controller_stock.html'
-    paginate_by = 10
+    paginate_by = 15
     permission_required = 'controller_stock.view_controllerstock'
     permission_denied_message = 'Você não tem autorização para acessar está página'
 

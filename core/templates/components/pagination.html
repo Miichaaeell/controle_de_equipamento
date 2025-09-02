@@ -1,14 +1,47 @@
- {% if is_paginated %}
-        <div class="mt-6 flex justify-center space-x-2">
-            {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}&q={{ request.GET.q }}&location={{ request.GET.location }}" class="px-4 py-2 bg-gray-800 rounded hover:bg-gray-700">Anterior</a>
-            {% endif %}
+{% if is_paginated %}
+  <div class="mt-6 flex justify-center space-x-2">
 
-            <span class="px-4 py-2 bg-blue-600 text-white rounded">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
-
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}&q={{ request.GET.q }}&location={{ request.GET.location }}" class="px-4 py-2 bg-gray-800 rounded hover:bg-gray-700">Próxima</a>
-            {% endif %}
-        </div>
+    {# Primeira + Anterior #}
+    {% if page_obj.has_previous %}
+      <a href="?page=1&q={{ request.GET.q }}&location={{ request.GET.location }}" 
+         class="px-3 py-2 bg-gray-800 rounded hover:bg-gray-700">Primeira</a>
+      <a href="?page={{ page_obj.previous_page_number }}&q={{ request.GET.q }}&location={{ request.GET.location }}" 
+         class="px-3 py-2 bg-gray-800 rounded hover:bg-gray-700">Anterior</a>
     {% endif %}
-</div>
+
+    {# Reticências antes (se necessário) #}
+    {% if page_obj.number > 3 %}
+      <a href="?page=1&q={{ request.GET.q }}&location={{ request.GET.location }}" 
+         class="px-3 py-2 bg-gray-800 rounded hover:bg-gray-700">1</a>
+      <span class="px-3 py-2">…</span>
+    {% endif %}
+
+    {# Páginas vizinhas #}
+    {% for num in page_obj.paginator.page_range %}
+      {% if num >= page_obj.number|add:"-2" and num <= page_obj.number|add:"2" %}
+        {% if num == page_obj.number %}
+          <span class="px-3 py-2 bg-blue-600 text-white rounded">{{ num }}</span>
+        {% else %}
+          <a href="?page={{ num }}&q={{ request.GET.q }}&location={{ request.GET.location }}" 
+             class="px-3 py-2 bg-gray-800 rounded hover:bg-gray-700">{{ num }}</a>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+
+    {# Reticências depois (se necessário) #}
+    {% if page_obj.number < page_obj.paginator.num_pages|add:"-2" %}
+      <span class="px-3 py-2">…</span>
+      <a href="?page={{ page_obj.paginator.num_pages }}&q={{ request.GET.q }}&location={{ request.GET.location }}" 
+         class="px-3 py-2 bg-gray-800 rounded hover:bg-gray-700">{{ page_obj.paginator.num_pages }}</a>
+    {% endif %}
+
+    {# Próxima + Última #}
+    {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}&q={{ request.GET.q }}&location={{ request.GET.location }}" 
+         class="px-3 py-2 bg-gray-800 rounded hover:bg-gray-700">Próxima</a>
+      <a href="?page={{ page_obj.paginator.num_pages }}&q={{ request.GET.q }}&location={{ request.GET.location }}" 
+         class="px-3 py-2 bg-gray-800 rounded hover:bg-gray-700">Última</a>
+    {% endif %}
+
+  </div>
+{% endif %}
