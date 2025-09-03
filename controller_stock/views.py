@@ -3,8 +3,8 @@ from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic import ListView, View, UpdateView, CreateView
 from core.mixins import FormValidMixin, CreateContextMixin, FilterQuerySetMixin
-from .models import ControllerStock, Tracking, Reason
-from .forms import ControllerStockForm, ReasonForm
+from .models import ControllerStock, Tracking, Reason, Location
+from .forms import ControllerStockForm, ReasonForm, LocationForm
 from core.functions import get_metrics
 
 
@@ -80,4 +80,30 @@ class UpdateReasonView(LoginRequiredMixin, PermissionRequiredMixin, CreateContex
     template_name = 'components/create_update_model.html'
     success_url = reverse_lazy('list_reason')
     permission_required = 'controller_stock.change_reason'
+    permission_denied_message = 'Você não tem autorização para acessar está página'
+
+
+class CreateLocationView(LoginRequiredMixin, PermissionRequiredMixin, CreateContextMixin, CreateView):
+    model = Location
+    form_class = LocationForm
+    template_name = 'components/create_update_model.html'
+    success_url = reverse_lazy('list_location')
+    permission_required = 'controller_stock.add_location'
+    permission_denied_message = 'Você não tem autorização para acessar está página'
+
+
+class ListLocationView(LoginRequiredMixin, PermissionRequiredMixin, CreateContextMixin, ListView):
+    model = Location
+    context_object_name = 'object_list'
+    template_name = 'components/list.html'
+    permission_required = 'controller_stock.view_location'
+    permission_denied_message = 'Você não tem autorização para acessar está página'
+
+
+class UpdateLocationView(LoginRequiredMixin, PermissionRequiredMixin, CreateContextMixin, UpdateView):
+    model = Location
+    form_class = LocationForm
+    template_name = 'components/create_update_model.html'
+    success_url = reverse_lazy('list_location')
+    permission_required = 'controller_stock.change_location'
     permission_denied_message = 'Você não tem autorização para acessar está página'

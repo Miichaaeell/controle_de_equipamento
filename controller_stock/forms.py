@@ -1,5 +1,5 @@
 from django import forms
-from .models import ControllerStock, Reason
+from .models import ControllerStock, Reason, Location
 
 
 class ControllerStockForm(forms.ModelForm):
@@ -34,4 +34,24 @@ class ReasonForm(forms.ModelForm):
                 "class": "mt-1 block w-full bg-gray-800 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500",
                 "required": True,
             })
+        }
+
+
+class LocationForm(forms.ModelForm):
+    class Meta:
+        model = Location
+        fields = '__all__'
+        widgets = {
+            'location': forms.TextInput(attrs={
+                "class": "mt-1 block w-full bg-gray-800 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500",
+                "required": True,
+            }),
+            'type': forms.Select(attrs={
+                "class": "mt-1 block w-full bg-gray-800 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500",
+                "required": True,
+            }),
+            'user': forms.Select(attrs={
+                "class": "mt-1 block w-full bg-gray-800 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500",
+                "required": True,
+            }),
         }

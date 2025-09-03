@@ -56,7 +56,7 @@
         
         {% if perms.equipment.view_category %}
             <a href="{% url 'list_category' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition" title="Categorias de equipamento">
-            🗂️ <span x-show="open">Categorias de equipamento</span>
+            🔖 <span x-show="open">Categorias de equipamento</span>
         </a>
         {% endif %}
             
@@ -79,8 +79,13 @@
             <a href="{% url 'list_statusequipment' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition" title="Status de Equipamento">
             ✅ <span x-show="open">Status de Equipamento</span>
         </a>
-        {% endif %}            
-        
+        {% endif %}
+                    
+        {% if perms.controller_stock.view_location %}
+            <a href="{% url 'list_location' %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition" title="Localizações">
+            📌 <span x-show="open">Localizações</span>
+        </a>
+        {% endif %}
             <a href="{% url 'detail_account' user.id %}" class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition" title="Meu Perfil">
             👤 <span x-show="open">Meu Perfil</span>
         </a>
