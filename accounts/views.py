@@ -2,6 +2,7 @@ from django.views.generic import View, DetailView
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 from datetime import datetime
 
 
@@ -45,12 +46,12 @@ class LogoutView(View):
         return redirect('login')
 
 
-class DetailAccountView(DetailView):
+class DetailAccountView(LoginRequiredMixin, DetailView):
     model = User
     template_name = 'detail_account.html'
 
 
-class PasswordChangeView(View):
+class PasswordChangeView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         return render(request, 'change_password.html')
 

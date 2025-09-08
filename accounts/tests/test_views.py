@@ -12,6 +12,7 @@ def create_user_test():
     return user
 
 
+# testes views de login
 def test_login_view_status_200(client):
     url = reverse('login')
     response = client.get(url)
@@ -31,17 +32,63 @@ def test_login_view_status_302(client, create_user_test):
 
 
 @pytest.mark.django_db
-def test_detail_account_view(client, create_user_test):
+def test_login_fail_view_status_200(client):
+    login_url = reverse("login")
+    response = client.post(login_url, {
+        "username": "wronguser",
+        "password": "wrongpassword"
+    })
+    assert response.status_code == 200
+    assert b'Usu\xc3\xa1rio ou Senha inv\xc3\xa1lidos' in response.content
+
+
+# testes views de logout
+@pytest.mark.django_db
+def test_logout_view(client, create_user_test):
+    url = reverse('logout')
+    client.login(username=create_user_test.username,
+                 password='testpassword'
+                 )
+    response = client.get(url)
+    assert response.status_code == 302
+    assert response.url == reverse('login')
+
+
+# testes de view de detalhe da conta
+@pytest.mark.django_db
+def test_detail_account_view_status_200(client, create_user_test):
     url = reverse('detail_account', args=[create_user_test.id])
+    client.login(username=create_user_test.username,
+                 password='testpassword'
+                 )
     response = client.get(url)
     assert response.status_code == 200
 
 
 @pytest.mark.django_db
-def test_get_password_change_view(client, create_user_test):
+def test_detail_account_view_status_302(client, create_user_test):
+    url = reverse('detail_account', args=[create_user_test.id])
+    response = client.get(url)
+    assert response.status_code == 302
+    assert response.url == f"{reverse('login')}?next={url}"
+
+
+# testes de view de alteração de senha
+@pytest.mark.django_db
+def test_get_password_change_view_status_200(client, create_user_test):
     url = reverse('password_change')
+    client.login(username=create_user_test.username,
+                 password='testpassword'
+                 )
     response = client.get(url)
     assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_get_password_change_view_status_302(client, create_user_test):
+    url = reverse('password_change')
+    response = client.get(url)
+    assert response.status_code == 302
 
 
 @pytest.mark.django_db
