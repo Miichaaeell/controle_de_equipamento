@@ -1,4 +1,5 @@
 from decouple import config
+from .functions import get_saudacao
 
 
 def global_context(request):
@@ -10,5 +11,6 @@ def global_context(request):
         'enterprise_name': config('ENTERPRISE_NAME'),
         'url_logo': config('URL_LOGO'),
         'url_favicon': config('URL_FAVICON'),
-        'thecnical': thecnical
+        'thecnical': thecnical,
+        'saudacao': get_saudacao(),
     }

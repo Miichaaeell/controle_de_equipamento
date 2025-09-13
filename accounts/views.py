@@ -3,23 +3,21 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
-from datetime import datetime
+from core.functions import get_saudacao
 
 
 class LoginView(View):
-    hour = datetime.now().time().hour
-    if hour >= 0 and hour < 12:
-        saudacao = 'Bom dia'
-    elif hour >= 12 and hour < 18:
-        saudacao = 'Boa Tarde'
-    elif hour >= 18 and hour <= 23:
-        saudacao = 'Boa Noite'
-
     def get(self, request, *args, **kwargs):
         context = {
-            'saudacao': self.saudacao
+            'saudacao': get_saudacao()
         }
-        return render(request, 'login.html', context)
+        if request.user.is_authenticated:
+            if request.user.has_perm('controller_stock.view_controllerstock') and not request.user.groups.filter(name__icontains='tecnico'):
+                return redirect('dashboard')
+            else:
+                return redirect('stock')
+        else:
+            return render(request, 'login.html', context)
 
     def post(self, request, *args, **kwargs):
         username = request.POST['username']
@@ -34,7 +32,7 @@ class LoginView(View):
 
         else:
             context = {
-                'saudacao': self.saudacao,
+                'saudacao': get_saudacao(),
                 'erro': 'Usuário ou Senha inválidos'
             }
             return render(request, 'login.html', context)
@@ -61,7 +59,7 @@ class PasswordChangeView(LoginRequiredMixin, View):
         validation_password = user.check_password(old_password)
         if validation_password:
             new_password = request.POST['new_password']
-            confirmation_password = request.POST['confirmation_passowrd']
+            confirmation_password = request.POST['confirmation_password']
             if new_password == confirmation_password:
                 user.set_password(new_password)
                 user.save()

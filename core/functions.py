@@ -3,6 +3,18 @@ from controller_stock.models import ControllerStock, Reason, Location
 import pandas as pd
 from collections.abc import Iterable
 from django.db.models import Q, Count, F
+from datetime import datetime
+
+
+def get_saudacao():
+    hour = datetime.now().time().hour
+    if hour >= 0 and hour < 12:
+        saudacao = 'Bom dia ☕'
+    elif hour >= 12 and hour < 18:
+        saudacao = 'Boa Tarde ☀️'
+    elif hour >= 18 and hour <= 23:
+        saudacao = 'Boa Noite 🌙'
+    return saudacao
 
 
 def create_controller_stock(instance):
